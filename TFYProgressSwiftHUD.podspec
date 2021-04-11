@@ -10,7 +10,7 @@ Pod::Spec.new do |spec|
 Swift版的多动画提示框，最低支持iOS 13 系统以上。
                    DESC
 
-  spec.homepage     = "http://EXAMPLE/TFYProgressSwiftHUD"
+  spec.homepage     = "https://github.com/13662049573/TFYProgressSwiftHUD"
   
   spec.license      = "MIT"
   
@@ -20,7 +20,7 @@ Swift版的多动画提示框，最低支持iOS 13 系统以上。
   spec.platform     = :ios, "13.0"
 
  
-  spec.source       = { :git => "http://EXAMPLE/TFYProgressSwiftHUD.git", :tag => spec.version }
+  spec.source       = { :git => "https://github.com/13662049573/TFYProgressSwiftHUD.git", :tag => spec.version }
 
 
   spec.source_files  = "Classes/**/*.{h,m}"
