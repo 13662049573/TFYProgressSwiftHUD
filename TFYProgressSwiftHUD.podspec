@@ -19,13 +19,17 @@ Swift版的多动画提示框，最低支持iOS 13 系统以上。
 
   spec.platform     = :ios, "13.0"
 
- 
-  spec.source       = { :git => "https://github.com/13662049573/TFYProgressSwiftHUD.git", :tag => spec.version }
+  spec.swift_version = '5.0'
 
+  spec.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.0' }
+
+  spec.source       = { :git => "https://github.com/13662049573/TFYProgressSwiftHUD.git", :tag => spec.version }
 
   spec.source_files  = "TFYProgressSwiftHUD/TFYProgressSwiftHUD/**/*.{swift}"
   
 
   spec.requires_arc = true
+
+  
 
 end
