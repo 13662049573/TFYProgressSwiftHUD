@@ -7,14 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		364C1F4526219EBD00417AA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F4426219EBD00417AA0 /* AppDelegate.swift */; };
-		364C1F4726219EBD00417AA0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F4626219EBD00417AA0 /* SceneDelegate.swift */; };
-		364C1F4926219EBD00417AA0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F4826219EBD00417AA0 /* ViewController.swift */; };
+		36061C1F2622917E00BB714F /* TFYProgressSwiftUilt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36061C1E2622917E00BB714F /* TFYProgressSwiftUilt.swift */; };
 		364C1F4C26219EBD00417AA0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 364C1F4A26219EBD00417AA0 /* Main.storyboard */; };
 		364C1F4E26219EBE00417AA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 364C1F4D26219EBE00417AA0 /* Assets.xcassets */; };
 		364C1F5126219EBE00417AA0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 364C1F4F26219EBE00417AA0 /* LaunchScreen.storyboard */; };
 		364C1F5C26219EBE00417AA0 /* TFYProgressSwiftHUDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F5B26219EBE00417AA0 /* TFYProgressSwiftHUDTests.swift */; };
 		364C1F6726219EBE00417AA0 /* TFYProgressSwiftHUDUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F6626219EBE00417AA0 /* TFYProgressSwiftHUDUITests.swift */; };
+		364C1F8326219F4000417AA0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F7E26219F4000417AA0 /* ViewController.swift */; };
+		364C1F8426219F4000417AA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F8026219F4000417AA0 /* AppDelegate.swift */; };
+		364C1F8526219F4000417AA0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F8126219F4000417AA0 /* SceneDelegate.swift */; };
+		364C1F922621A00000417AA0 /* TFYProgressSwiftHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F912621A00000417AA0 /* TFYProgressSwiftHUD.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,10 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		36061C1E2622917E00BB714F /* TFYProgressSwiftUilt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFYProgressSwiftUilt.swift; sourceTree = "<group>"; };
 		364C1F4126219EBD00417AA0 /* TFYProgressSwiftHUD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFYProgressSwiftHUD.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		364C1F4426219EBD00417AA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		364C1F4626219EBD00417AA0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		364C1F4826219EBD00417AA0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		364C1F4B26219EBD00417AA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		364C1F4D26219EBE00417AA0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		364C1F5026219EBE00417AA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -49,6 +49,10 @@
 		364C1F6226219EBE00417AA0 /* TFYProgressSwiftHUDUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TFYProgressSwiftHUDUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		364C1F6626219EBE00417AA0 /* TFYProgressSwiftHUDUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFYProgressSwiftHUDUITests.swift; sourceTree = "<group>"; };
 		364C1F6826219EBE00417AA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		364C1F7E26219F4000417AA0 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		364C1F8026219F4000417AA0 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		364C1F8126219F4000417AA0 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		364C1F912621A00000417AA0 /* TFYProgressSwiftHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFYProgressSwiftHUD.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,9 +103,9 @@
 		364C1F4326219EBD00417AA0 /* TFYProgressSwiftHUD */ = {
 			isa = PBXGroup;
 			children = (
-				364C1F4426219EBD00417AA0 /* AppDelegate.swift */,
-				364C1F4626219EBD00417AA0 /* SceneDelegate.swift */,
-				364C1F4826219EBD00417AA0 /* ViewController.swift */,
+				364C1F7F26219F4000417AA0 /* AppDelegate */,
+				364C1F7D26219F4000417AA0 /* Class */,
+				364C1F8226219F4000417AA0 /* TFYProgressSwiftHUD */,
 				364C1F4A26219EBD00417AA0 /* Main.storyboard */,
 				364C1F4D26219EBE00417AA0 /* Assets.xcassets */,
 				364C1F4F26219EBE00417AA0 /* LaunchScreen.storyboard */,
@@ -126,6 +130,32 @@
 				364C1F6826219EBE00417AA0 /* Info.plist */,
 			);
 			path = TFYProgressSwiftHUDUITests;
+			sourceTree = "<group>";
+		};
+		364C1F7D26219F4000417AA0 /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				364C1F7E26219F4000417AA0 /* ViewController.swift */,
+			);
+			path = Class;
+			sourceTree = "<group>";
+		};
+		364C1F7F26219F4000417AA0 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				364C1F8026219F4000417AA0 /* AppDelegate.swift */,
+				364C1F8126219F4000417AA0 /* SceneDelegate.swift */,
+			);
+			path = AppDelegate;
+			sourceTree = "<group>";
+		};
+		364C1F8226219F4000417AA0 /* TFYProgressSwiftHUD */ = {
+			isa = PBXGroup;
+			children = (
+				364C1F912621A00000417AA0 /* TFYProgressSwiftHUD.swift */,
+				36061C1E2622917E00BB714F /* TFYProgressSwiftUilt.swift */,
+			);
+			path = TFYProgressSwiftHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,9 +288,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				364C1F4926219EBD00417AA0 /* ViewController.swift in Sources */,
-				364C1F4526219EBD00417AA0 /* AppDelegate.swift in Sources */,
-				364C1F4726219EBD00417AA0 /* SceneDelegate.swift in Sources */,
+				364C1F8326219F4000417AA0 /* ViewController.swift in Sources */,
+				364C1F8426219F4000417AA0 /* AppDelegate.swift in Sources */,
+				36061C1F2622917E00BB714F /* TFYProgressSwiftUilt.swift in Sources */,
+				364C1F922621A00000417AA0 /* TFYProgressSwiftHUD.swift in Sources */,
+				364C1F8526219F4000417AA0 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,6 +471,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QH95759TSS;
 				INFOPLIST_FILE = TFYProgressSwiftHUD/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -458,6 +491,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QH95759TSS;
 				INFOPLIST_FILE = TFYProgressSwiftHUD/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
