@@ -20,77 +20,77 @@ class ViewController: UIViewController {
     private var timer: Timer?
     private var status: String?
 
-    private let textShort    = "Please wait..."
-    private let textLong    = "Please wait. We need some more time to work out this situation."
+    private let textShort    = "请稍等..."
+    private let textLong    = "请稍等。拉斯可能翻番了反复拿饭是免费拿，反，拿饭，按，拿饭，案犯，泛泛泛滥反腐两年拉了父类你发你发，啊你"
 
-    private let textSuccess    = "That was awesome!"
-    private let textError    = "Something went wrong."
+    private let textSuccess    = "那是太棒了!"
+    private let textError    = "发生了一些错误。"
 
-    private let textSucceed    = "That was awesome!"
-    private let textFailed    = "Something went wrong."
-    private let textAdded    = "Successfully added."
+    private let textSucceed    = "那是太棒了!"
+    private let textFailed    = "发生了一些错误。"
+    private let textAdded    = "成功地补充道。"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         title = "TFYProgressSwiftHUD"
         
-        actions1.append("Animation - No text")
-        actions1.append("Animation - Short text")
-        actions1.append("Animation - Longer text")
+        actions1.append("动画-没有文字")
+        actions1.append("动画-短文本")
+        actions1.append("动画-较长的文本")
 
-        types.append("System Activity Indicator")
-        types.append("Horizontal Circles Pulse")
-        types.append("Line Scaling")
-        types.append("Single Circle Pulse")
-        types.append("Multiple Circle Pulse")
-        types.append("Single Circle Scale Ripple")
-        types.append("Multiple Circle Scale Ripple")
-        types.append("Circle Spin Fade")
-        types.append("Line Spin Fade")
-        types.append("Circle Rotate Chase")
-        types.append("Circle Stroke Spin")
+        types.append("系统活动指标")
+        types.append("水平圆脉冲")
+        types.append("行缩放")
+        types.append("单圈脉冲")
+        types.append("多个圆脉冲")
+        types.append("单圆尺度波痕")
+        types.append("多圆尺度波痕")
+        types.append("圆旋转褪色")
+        types.append("行旋转褪色")
+        types.append("圆旋转追逐")
+        types.append("圆中风旋转")
 
-        actions2.append("Progress - No text")
-        actions2.append("Progress - Short text")
-        actions2.append("Progress - Longer text")
+        actions2.append("进度-没有文本")
+        actions2.append("进度-短文本")
+        actions2.append("进度-较长的文本")
 
-        actions3.append("Progress - 10%")
-        actions3.append("Progress - 40%")
-        actions3.append("Progress - 60%")
-        actions3.append("Progress - 90%")
+        actions3.append("进度 - 10%")
+        actions3.append("进度 - 40%")
+        actions3.append("进度 - 60%")
+        actions3.append("进度 - 90%")
 
-        actions4.append("Success - No text")
-        actions4.append("Success - Short text")
-        actions4.append("Error - No text")
-        actions4.append("Error - Short text")
+        actions4.append("成功-没有文字")
+        actions4.append("成功-短文本")
+        actions4.append("错误-没有文本")
+        actions4.append("错误-短文本")
 
-        actions5.append("Succeed - No text")
-        actions5.append("Succeed - Short text")
-        actions5.append("Failed - No text")
-        actions5.append("Failed - Short text")
-        actions5.append("Added - No text")
-        actions5.append("Added - Short text")
+        actions5.append("成功-没有文本")
+        actions5.append("成功-短文本")
+        actions5.append("失败-没有文本")
+        actions5.append("失败-短文本")
+        actions5.append("新增-无文字")
+        actions5.append("新增-短文本")
 
-        actions6.append("Heart")
-        actions6.append("Doc")
-        actions6.append("Bookmark")
-        actions6.append("Moon")
-        actions6.append("Star")
-        actions6.append("Exclamation")
-        actions6.append("Flag")
-        actions6.append("Message")
-        actions6.append("Question")
-        actions6.append("Bolt")
-        actions6.append("Shuffle")
-        actions6.append("Eject")
-        actions6.append("Card")
-        actions6.append("Rotate")
-        actions6.append("Like")
-        actions6.append("Dislike")
-        actions6.append("Privacy")
-        actions6.append("Cart")
-        actions6.append("Search")
+        actions6.append("心")
+        actions6.append("医生")
+        actions6.append("书签")
+        actions6.append("月亮")
+        actions6.append("明星")
+        actions6.append("感叹")
+        actions6.append("国旗")
+        actions6.append("消息")
+        actions6.append("问题")
+        actions6.append("螺栓")
+        actions6.append("洗牌")
+        actions6.append("喷射")
+        actions6.append("卡")
+        actions6.append("旋转")
+        actions6.append("就像")
+        actions6.append("不喜欢")
+        actions6.append("隐私")
+        actions6.append("车")
+        actions6.append("搜索")
 
 
         let tableView = UITableView(frame: self.view.bounds, style: .grouped)
@@ -143,10 +143,10 @@ extension ViewController:UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if (indexPath.section == 0) && (indexPath.row == 0) { return self.tableView(tableView, cellWithText: "cell")     }
+        if (indexPath.section == 0) && (indexPath.row == 0) { return self.tableView(tableView, cellWithText: "类型")     }
 
-        if (indexPath.section == 0) && (indexPath.row == 1) { return self.tableView(tableView, cellWithText: "Dismiss Keyboard")    }
-        if (indexPath.section == 0) && (indexPath.row == 2) { return self.tableView(tableView, cellWithText: "Dismiss HUD")            }
+        if (indexPath.section == 0) && (indexPath.row == 1) { return self.tableView(tableView, cellWithText: "关闭 Keyboard")    }
+        if (indexPath.section == 0) && (indexPath.row == 2) { return self.tableView(tableView, cellWithText: "关闭 HUD")            }
 
         if (indexPath.section == 1) { return self.tableView(tableView, cellWithText: actions1[indexPath.row])    }
         if (indexPath.section == 2) { return self.tableView(tableView, cellWithText: types[indexPath.row])        }
@@ -161,13 +161,13 @@ extension ViewController:UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 
-        if (section == 1) { return "Animation"            }
-        if (section == 2) { return "Animation Types"    }
-        if (section == 3) { return "Progress"            }
-        if (section == 4) { return "Progress"            }
-        if (section == 5) { return "Action - Static"    }
-        if (section == 6) { return "Action - Animated"    }
-        if (section == 7) { return "Icons - Static"        }
+        if (section == 1) { return "动画"            }
+        if (section == 2) { return "动画类型"    }
+        if (section == 3) { return "进步"            }
+        if (section == 4) { return "进步"            }
+        if (section == 5) { return "行动——静态"    }
+        if (section == 6) { return "行动——动画"    }
+        if (section == 7) { return "图标-静态"        }
 
         return nil
     }
@@ -243,25 +243,25 @@ extension ViewController:UITableViewDelegate {
         }
 
         if (indexPath.section == 7) {
-            if (indexPath.row == 0) { TFYProgressSwiftHUD.show(icon: .heart)                            }
-            if (indexPath.row == 1) { TFYProgressSwiftHUD.show(icon: .doc)                                }
-            if (indexPath.row == 2) { TFYProgressSwiftHUD.show(icon: .bookmark)                            }
-            if (indexPath.row == 3) { TFYProgressSwiftHUD.show(icon: .moon)                                }
-            if (indexPath.row == 4) { TFYProgressSwiftHUD.show(icon: .star)                                }
-            if (indexPath.row == 5) { TFYProgressSwiftHUD.show(icon: .exclamation)                        }
-            if (indexPath.row == 6) { TFYProgressSwiftHUD.show(icon: .flag)                                }
-            if (indexPath.row == 7) { TFYProgressSwiftHUD.show(icon: .message)                            }
-            if (indexPath.row == 8) { TFYProgressSwiftHUD.show(icon: .question)                            }
-            if (indexPath.row == 9) { TFYProgressSwiftHUD.show(icon: .bolt)                                }
-            if (indexPath.row == 10) { TFYProgressSwiftHUD.show(icon: .shuffle)                            }
-            if (indexPath.row == 11) { TFYProgressSwiftHUD.show(icon: .eject)                            }
-            if (indexPath.row == 12) { TFYProgressSwiftHUD.show(icon: .card)                            }
-            if (indexPath.row == 13) { TFYProgressSwiftHUD.show(icon: .rotate)                            }
-            if (indexPath.row == 14) { TFYProgressSwiftHUD.show(icon: .like)                            }
-            if (indexPath.row == 15) { TFYProgressSwiftHUD.show(icon: .dislike)                            }
-            if (indexPath.row == 16) { TFYProgressSwiftHUD.show(icon: .privacy)                            }
-            if (indexPath.row == 17) { TFYProgressSwiftHUD.show(icon: .cart)                            }
-            if (indexPath.row == 18) { TFYProgressSwiftHUD.show(icon: .search)                            }
+            if (indexPath.row == 0) { TFYProgressSwiftHUD.show(status,icon: .heart)                            }
+            if (indexPath.row == 1) { TFYProgressSwiftHUD.show(status,icon: .doc)                                }
+            if (indexPath.row == 2) { TFYProgressSwiftHUD.show(status,icon: .bookmark)                            }
+            if (indexPath.row == 3) { TFYProgressSwiftHUD.show(status,icon: .moon)                                }
+            if (indexPath.row == 4) { TFYProgressSwiftHUD.show(status,icon: .star)                                }
+            if (indexPath.row == 5) { TFYProgressSwiftHUD.show(status,icon: .exclamation)                        }
+            if (indexPath.row == 6) { TFYProgressSwiftHUD.show(status,icon: .flag)                                }
+            if (indexPath.row == 7) { TFYProgressSwiftHUD.show(status,icon: .message)                            }
+            if (indexPath.row == 8) { TFYProgressSwiftHUD.show(status,icon: .question)                            }
+            if (indexPath.row == 9) { TFYProgressSwiftHUD.show(status,icon: .bolt)                                }
+            if (indexPath.row == 10) { TFYProgressSwiftHUD.show(status,icon: .shuffle)                            }
+            if (indexPath.row == 11) { TFYProgressSwiftHUD.show(status,icon: .eject)                            }
+            if (indexPath.row == 12) { TFYProgressSwiftHUD.show(status,icon: .card)                            }
+            if (indexPath.row == 13) { TFYProgressSwiftHUD.show(status,icon: .rotate)                            }
+            if (indexPath.row == 14) { TFYProgressSwiftHUD.show(status,icon: .like)                            }
+            if (indexPath.row == 15) { TFYProgressSwiftHUD.show(status,icon: .dislike)                            }
+            if (indexPath.row == 16) { TFYProgressSwiftHUD.show(status,icon: .privacy)                            }
+            if (indexPath.row == 17) { TFYProgressSwiftHUD.show(status,icon: .cart)                            }
+            if (indexPath.row == 18) { TFYProgressSwiftHUD.show(status,icon: .search)                            }
         }
     }
 }

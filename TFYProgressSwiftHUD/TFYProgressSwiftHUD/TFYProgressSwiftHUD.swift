@@ -516,46 +516,47 @@ private class ProgressView:UIView {
 
 @available(iOS 13.0, *)
 public extension TFYProgressSwiftHUD {
+    ///选择展示内部动画属于
     class var animationType:AnimationType {
         get { shared.animationType }
         set { shared.animationType = newValue }
     }
-    
+    ///背景颜色自定义
     class var colorBackground: UIColor {
         get { shared.colorBackground }
         set { shared.colorBackground = newValue }
     }
-
+    ///加载视图背景颜色
     class var colorHUD: UIColor {
         get { shared.colorHUD }
         set { shared.colorHUD = newValue }
     }
-
+    ////字体颜色
     class var colorStatus: UIColor {
         get { shared.colorStatus }
         set { shared.colorStatus = newValue }
     }
-
+    ///动画颜色
     class var colorAnimation: UIColor {
         get { shared.colorAnimation }
         set { shared.colorAnimation = newValue }
     }
-
+    ///进度条颜色
     class var colorProgress: UIColor {
         get { shared.colorProgress }
         set { shared.colorProgress = newValue }
     }
-
+    ///字体大小
     class var fontStatus: UIFont {
         get { shared.fontStatus }
         set { shared.fontStatus = newValue }
     }
-
+    ///加载成功自定义图片
     class var imageSuccess: UIImage {
         get { shared.imageSuccess }
         set { shared.imageSuccess = newValue }
     }
-
+    ///加载失败自定义图片
     class var imageError: UIImage {
         get { shared.imageError }
         set { shared.imageError = newValue }
@@ -570,7 +571,7 @@ public extension TFYProgressSwiftHUD {
             shared.hudHide()
         }
     }
-    ///带有文体的弹出视图
+    ///带有加载圈文体的弹出视图
     class func show(_ status:String? = nil,interaction:Bool = true) {
         DispatchQueue.main.async {
             shared.setup(status: status,hide: false, interaction: interaction)
