@@ -7,6 +7,14 @@
 
 import UIKit
 
+
+func log<T>(_ msg: T,file: NSString = #file, line: Int = #line, fn: String = #function) {
+    #if DEBUG
+    let prefix = "\(file.lastPathComponent)_\(line)_\(fn):"
+    print(prefix, msg)
+    #endif
+}
+
 class ViewController: UIViewController {
 
     private var types: [String] = []
@@ -110,7 +118,7 @@ class ViewController: UIViewController {
             intervalCount += 1
             TFYProgressSwiftHUD.showProgress(status, intervalCount/100)
             if (intervalCount >= 100) {
-                
+                log("打印结果=========：\(intervalCount)");
                 self.actionProgressStop()
             }
         }
