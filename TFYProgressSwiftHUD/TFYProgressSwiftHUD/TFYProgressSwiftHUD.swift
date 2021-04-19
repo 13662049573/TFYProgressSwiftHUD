@@ -213,9 +213,8 @@ public class TFYProgressSwiftHUD: UIView {
     ///添加底层容器在window 上
     private func setupBackground(_ interaction:Bool) {
         if viewBackground == nil {
-            let mainWindow = UIApplication.shared.windows.first ?? UIWindow()
             viewBackground = UIView(frame: self.bounds)
-            mainWindow.addSubview(viewBackground!)
+            KeyWindows()?.addSubview(viewBackground!)
         }
         viewBackground?.backgroundColor = interaction ? .clear : colorBackground
         viewBackground?.isUserInteractionEnabled = (interaction == false)
@@ -429,7 +428,21 @@ public class TFYProgressSwiftHUD: UIView {
         }
         return 0
     }
-    
+}
+
+public func KeyWindows() -> UIWindow? {
+    var window:UIWindow? = nil
+    if #available(iOS 13.0, *) {
+        for windowScene:UIWindowScene in ((UIApplication.shared.connectedScenes as? Set<UIWindowScene>)!) {
+            if windowScene.activationState == .foregroundActive {
+                window = windowScene.windows.first
+                break
+            }
+        }
+        return window
+    } else {
+        return UIApplication.shared.keyWindow
+    }
 }
 
 @available(iOS 13.0, *)
