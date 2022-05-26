@@ -11,7 +11,7 @@ import UIKit
 
 ///动画1 设置
 func animationSystemActivityIndicator(_ view:UIView,color:UIColor) {
-    let spinner = UIActivityIndicatorView(style: .large)
+    let spinner = UIActivityIndicatorView(style: .whiteLarge)
     spinner.frame = view.bounds
     spinner.color = color
     spinner.hidesWhenStopped = true

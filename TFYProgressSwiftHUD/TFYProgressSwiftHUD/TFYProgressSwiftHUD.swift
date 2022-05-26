@@ -431,18 +431,23 @@ public class TFYProgressSwiftHUD: UIView {
 }
 
 public func KeyWindows() -> UIWindow? {
-    var window:UIWindow? = nil
+    var keyWindow:UIWindow?
     if #available(iOS 13.0, *) {
-        for windowScene:UIWindowScene in ((UIApplication.shared.connectedScenes as? Set<UIWindowScene>)!) {
-            if windowScene.activationState == .foregroundActive {
-                window = windowScene.windows.first
-                break
-            }
-        }
-        return window
+        keyWindow = UIApplication.shared.connectedScenes
+            .map({$0 as? UIWindowScene})
+            .compactMap({$0})
+            .first?.windows.first
     } else {
-        return UIApplication.shared.keyWindow
+        if let window = UIApplication.shared.delegate?.window as? UIWindow {
+            keyWindow = window
+        } else {
+            for window in UIApplication.shared.windows where window.windowLevel == .normal && !window.isHidden {
+                keyWindow = window
+            }
+            keyWindow = UIApplication.shared.windows.first
+        }
     }
+    return keyWindow
 }
 
 @available(iOS 13.0, *)
@@ -576,7 +581,6 @@ public extension TFYProgressSwiftHUD {
     }
 }
 
-@available(iOS 13.0, *)
 public extension TFYProgressSwiftHUD {
     ///隐藏视图
     class func dismiss() {
