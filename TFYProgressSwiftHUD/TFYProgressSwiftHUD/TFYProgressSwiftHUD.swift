@@ -432,21 +432,10 @@ public class TFYProgressSwiftHUD: UIView {
 
 public func KeyWindows() -> UIWindow? {
     var keyWindow:UIWindow?
-    if #available(iOS 13.0, *) {
-        keyWindow = UIApplication.shared.connectedScenes
-            .map({$0 as? UIWindowScene})
-            .compactMap({$0})
-            .first?.windows.first
-    } else {
-        if let window = UIApplication.shared.delegate?.window as? UIWindow {
-            keyWindow = window
-        } else {
-            for window in UIApplication.shared.windows where window.windowLevel == .normal && !window.isHidden {
-                keyWindow = window
-            }
-            keyWindow = UIApplication.shared.windows.first
-        }
-    }
+    keyWindow = UIApplication.shared.connectedScenes
+        .map({$0 as? UIWindowScene})
+        .compactMap({$0})
+        .first?.windows.first
     return keyWindow
 }
 
