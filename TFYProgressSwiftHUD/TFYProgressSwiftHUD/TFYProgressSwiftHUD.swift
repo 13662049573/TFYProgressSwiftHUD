@@ -396,7 +396,7 @@ public class TFYProgressSwiftHUD: UIView {
             heightKeyboard = keyboardHeight()
         }
         
-        let mainWindow = UIApplication.shared.windows.first ?? UIWindow()
+        let mainWindow = KeyWindows()!
         let screen = mainWindow.bounds
         let center = CGPoint(x: screen.size.width/2, y: (screen.size.height - heightKeyboard)/2)
         
@@ -412,13 +412,17 @@ public class TFYProgressSwiftHUD: UIView {
            let inputSetContainerView = NSClassFromString("UIInputSetContainerView"),
            let inputSetHostView = NSClassFromString("UIInputSetHostView"){
             
-            for window in UIApplication.shared.windows {
-                if window.isKind(of: keyboardWindowClass) {
-                    for firstSubView in window.subviews {
-                        if firstSubView.isKind(of: inputSetContainerView) {
-                            for secondSubView in firstSubView.subviews {
-                                if secondSubView.isKind(of: inputSetHostView) {
-                                    return secondSubView.frame.size.height
+            if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                // 获取窗口列表
+                let windows = scene.windows
+                for window in windows {
+                    if window.isKind(of: keyboardWindowClass) {
+                        for firstSubView in window.subviews {
+                            if firstSubView.isKind(of: inputSetContainerView) {
+                                for secondSubView in firstSubView.subviews {
+                                    if secondSubView.isKind(of: inputSetHostView) {
+                                        return secondSubView.frame.size.height
+                                    }
                                 }
                             }
                         }
