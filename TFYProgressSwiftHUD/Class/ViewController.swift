@@ -16,7 +16,7 @@ func log<T>(_ msg: T,file: NSString = #file, line: Int = #line, fn: String = #fu
 }
 
 class ViewController: UIViewController {
-
+    
     private var types: [String] = []
     private var actions1: [String] = []
     private var actions2: [String] = []
@@ -37,6 +37,15 @@ class ViewController: UIViewController {
     private let textSucceed    = "那是太棒了!"
     private let textFailed    = "发生了一些错误。"
     private let textAdded    = "成功地补充道。"
+    
+    lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: self.view.bounds, style: .grouped)
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.delegate = self
+        tableView.dataSource = self
+        return tableView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,14 +108,9 @@ class ViewController: UIViewController {
         actions6.append("隐私")
         actions6.append("车")
         actions6.append("搜索")
-
-
-        let tableView = UITableView(frame: self.view.bounds, style: .grouped)
-        tableView.showsVerticalScrollIndicator = false
-        tableView.showsHorizontalScrollIndicator = false
-        tableView.delegate = self
-        tableView.dataSource = self
+        
         self.view.addSubview(tableView)
+        
     }
     
     func actionProgressStart(_ status: String? = nil) {
@@ -130,6 +134,11 @@ class ViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             TFYProgressSwiftHUD.showSucceed(interaction: false)
         }
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        tableView.frame = view.frame
     }
 }
 
