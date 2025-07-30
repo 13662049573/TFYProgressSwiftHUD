@@ -17,6 +17,11 @@
 		364C1F8426219F4000417AA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F8026219F4000417AA0 /* AppDelegate.swift */; };
 		364C1F8526219F4000417AA0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F8126219F4000417AA0 /* SceneDelegate.swift */; };
 		364C1F922621A00000417AA0 /* TFYProgressSwiftHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364C1F912621A00000417AA0 /* TFYProgressSwiftHUD.swift */; };
+		84CB83FC2E38ED2E005B1152 /* 加载-下拉.json in Resources */ = {isa = PBXBuildFile; fileRef = 84CB83F92E38ED2E005B1152 /* 加载-下拉.json */; };
+		84CB83FD2E38ED2E005B1152 /* 加载-中间.json in Resources */ = {isa = PBXBuildFile; fileRef = 84CB83FA2E38ED2E005B1152 /* 加载-中间.json */; };
+		9AF72BEC0AC52848EBE2F0CE /* Pods_TFYProgressSwiftHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0DE2A82AC727E9F3AA0E28 /* Pods_TFYProgressSwiftHUD.framework */; };
+		AEBB34E52DA75B8FE4CA5959 /* Pods_TFYProgressSwiftHUDTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C86E41939B27B065EA99C2C /* Pods_TFYProgressSwiftHUDTests.framework */; };
+		E768D087BA82635853ED2BB3 /* Pods_TFYProgressSwiftHUD_TFYProgressSwiftHUDUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC2E890264C66FAE3F67FCCB /* Pods_TFYProgressSwiftHUD_TFYProgressSwiftHUDUITests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +42,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		11FA56C43FFE1279CCF36DAC /* Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.debug.xcconfig"; path = "Target Support Files/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		1236D51F7DF9218EF22F0DB4 /* Pods-TFYProgressSwiftHUDTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFYProgressSwiftHUDTests.debug.xcconfig"; path = "Target Support Files/Pods-TFYProgressSwiftHUDTests/Pods-TFYProgressSwiftHUDTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2DE79D734F81DAA3594B660D /* Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.release.xcconfig"; path = "Target Support Files/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.release.xcconfig"; sourceTree = "<group>"; };
 		36061C1E2622917E00BB714F /* TFYProgressSwiftUilt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFYProgressSwiftUilt.swift; sourceTree = "<group>"; };
 		364C1F4126219EBD00417AA0 /* TFYProgressSwiftHUD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFYProgressSwiftHUD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		364C1F4B26219EBD00417AA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -53,6 +61,14 @@
 		364C1F8026219F4000417AA0 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		364C1F8126219F4000417AA0 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		364C1F912621A00000417AA0 /* TFYProgressSwiftHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFYProgressSwiftHUD.swift; sourceTree = "<group>"; };
+		4F0DE2A82AC727E9F3AA0E28 /* Pods_TFYProgressSwiftHUD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFYProgressSwiftHUD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5885BBA59255CE611B25D8CA /* Pods-TFYProgressSwiftHUDTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFYProgressSwiftHUDTests.release.xcconfig"; path = "Target Support Files/Pods-TFYProgressSwiftHUDTests/Pods-TFYProgressSwiftHUDTests.release.xcconfig"; sourceTree = "<group>"; };
+		7C86E41939B27B065EA99C2C /* Pods_TFYProgressSwiftHUDTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFYProgressSwiftHUDTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		84CB83F92E38ED2E005B1152 /* 加载-下拉.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "加载-下拉.json"; sourceTree = "<group>"; };
+		84CB83FA2E38ED2E005B1152 /* 加载-中间.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "加载-中间.json"; sourceTree = "<group>"; };
+		BC2E890264C66FAE3F67FCCB /* Pods_TFYProgressSwiftHUD_TFYProgressSwiftHUDUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFYProgressSwiftHUD_TFYProgressSwiftHUDUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2825B01E6C5AAF9C73E3A5A /* Pods-TFYProgressSwiftHUD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFYProgressSwiftHUD.release.xcconfig"; path = "Target Support Files/Pods-TFYProgressSwiftHUD/Pods-TFYProgressSwiftHUD.release.xcconfig"; sourceTree = "<group>"; };
+		EE2055E6A2B01FE454754ABE /* Pods-TFYProgressSwiftHUD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFYProgressSwiftHUD.debug.xcconfig"; path = "Target Support Files/Pods-TFYProgressSwiftHUD/Pods-TFYProgressSwiftHUD.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AF72BEC0AC52848EBE2F0CE /* Pods_TFYProgressSwiftHUD.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AEBB34E52DA75B8FE4CA5959 /* Pods_TFYProgressSwiftHUDTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,12 +92,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E768D087BA82635853ED2BB3 /* Pods_TFYProgressSwiftHUD_TFYProgressSwiftHUDUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		07A960B05BD4617766BD0425 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EE2055E6A2B01FE454754ABE /* Pods-TFYProgressSwiftHUD.debug.xcconfig */,
+				E2825B01E6C5AAF9C73E3A5A /* Pods-TFYProgressSwiftHUD.release.xcconfig */,
+				11FA56C43FFE1279CCF36DAC /* Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.debug.xcconfig */,
+				2DE79D734F81DAA3594B660D /* Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.release.xcconfig */,
+				1236D51F7DF9218EF22F0DB4 /* Pods-TFYProgressSwiftHUDTests.debug.xcconfig */,
+				5885BBA59255CE611B25D8CA /* Pods-TFYProgressSwiftHUDTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		364C1F3826219EBD00417AA0 = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +120,8 @@
 				364C1F5A26219EBE00417AA0 /* TFYProgressSwiftHUDTests */,
 				364C1F6526219EBE00417AA0 /* TFYProgressSwiftHUDUITests */,
 				364C1F4226219EBD00417AA0 /* Products */,
+				07A960B05BD4617766BD0425 /* Pods */,
+				7D62A42561ABB7DA06EA3095 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -135,6 +170,7 @@
 		364C1F7D26219F4000417AA0 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				84CB83FB2E38ED2E005B1152 /* Loading */,
 				364C1F7E26219F4000417AA0 /* ViewController.swift */,
 			);
 			path = Class;
@@ -158,6 +194,25 @@
 			path = TFYProgressSwiftHUD;
 			sourceTree = "<group>";
 		};
+		7D62A42561ABB7DA06EA3095 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4F0DE2A82AC727E9F3AA0E28 /* Pods_TFYProgressSwiftHUD.framework */,
+				BC2E890264C66FAE3F67FCCB /* Pods_TFYProgressSwiftHUD_TFYProgressSwiftHUDUITests.framework */,
+				7C86E41939B27B065EA99C2C /* Pods_TFYProgressSwiftHUDTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		84CB83FB2E38ED2E005B1152 /* Loading */ = {
+			isa = PBXGroup;
+			children = (
+				84CB83F92E38ED2E005B1152 /* 加载-下拉.json */,
+				84CB83FA2E38ED2E005B1152 /* 加载-中间.json */,
+			);
+			path = Loading;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -165,9 +220,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 364C1F6B26219EBE00417AA0 /* Build configuration list for PBXNativeTarget "TFYProgressSwiftHUD" */;
 			buildPhases = (
+				BDEB40B8108B0679CE740F9F /* [CP] Check Pods Manifest.lock */,
 				364C1F3D26219EBD00417AA0 /* Sources */,
 				364C1F3E26219EBD00417AA0 /* Frameworks */,
 				364C1F3F26219EBD00417AA0 /* Resources */,
+				C0161098F1BE20B873FF03B1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -182,6 +239,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 364C1F6E26219EBE00417AA0 /* Build configuration list for PBXNativeTarget "TFYProgressSwiftHUDTests" */;
 			buildPhases = (
+				9DE6C46ED61895EEE1DE1A1B /* [CP] Check Pods Manifest.lock */,
 				364C1F5326219EBE00417AA0 /* Sources */,
 				364C1F5426219EBE00417AA0 /* Frameworks */,
 				364C1F5526219EBE00417AA0 /* Resources */,
@@ -200,9 +258,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 364C1F7126219EBE00417AA0 /* Build configuration list for PBXNativeTarget "TFYProgressSwiftHUDUITests" */;
 			buildPhases = (
+				C0C8FC0E98F18B1FF21E3493 /* [CP] Check Pods Manifest.lock */,
 				364C1F5E26219EBE00417AA0 /* Sources */,
 				364C1F5F26219EBE00417AA0 /* Frameworks */,
 				364C1F6026219EBE00417AA0 /* Resources */,
+				68D7371880F2147EC6A0CE61 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -222,7 +282,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					364C1F4026219EBD00417AA0 = {
 						CreatedOnToolsVersion = 12.4;
@@ -263,6 +323,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				364C1F5126219EBE00417AA0 /* LaunchScreen.storyboard in Resources */,
+				84CB83FC2E38ED2E005B1152 /* 加载-下拉.json in Resources */,
+				84CB83FD2E38ED2E005B1152 /* 加载-中间.json in Resources */,
 				364C1F4E26219EBE00417AA0 /* Assets.xcassets in Resources */,
 				364C1F4C26219EBD00417AA0 /* Main.storyboard in Resources */,
 			);
@@ -283,6 +345,109 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		68D7371880F2147EC6A0CE61 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9DE6C46ED61895EEE1DE1A1B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TFYProgressSwiftHUDTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BDEB40B8108B0679CE740F9F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TFYProgressSwiftHUD-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C0161098F1BE20B873FF03B1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TFYProgressSwiftHUD/Pods-TFYProgressSwiftHUD-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TFYProgressSwiftHUD/Pods-TFYProgressSwiftHUD-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TFYProgressSwiftHUD/Pods-TFYProgressSwiftHUD-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C0C8FC0E98F18B1FF21E3493 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		364C1F3D26219EBD00417AA0 /* Sources */ = {
@@ -384,6 +549,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = QH95759TSS;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -447,6 +613,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = QH95759TSS;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -470,13 +637,14 @@
 		};
 		364C1F6C26219EBE00417AA0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE2055E6A2B01FE454754ABE /* Pods-TFYProgressSwiftHUD.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QH95759TSS;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = TFYProgressSwiftHUD/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -490,13 +658,14 @@
 		};
 		364C1F6D26219EBE00417AA0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2825B01E6C5AAF9C73E3A5A /* Pods-TFYProgressSwiftHUD.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QH95759TSS;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = TFYProgressSwiftHUD/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -510,13 +679,12 @@
 		};
 		364C1F6F26219EBE00417AA0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1236D51F7DF9218EF22F0DB4 /* Pods-TFYProgressSwiftHUDTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QH95759TSS;
 				INFOPLIST_FILE = TFYProgressSwiftHUDTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -532,13 +700,12 @@
 		};
 		364C1F7026219EBE00417AA0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5885BBA59255CE611B25D8CA /* Pods-TFYProgressSwiftHUDTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QH95759TSS;
 				INFOPLIST_FILE = TFYProgressSwiftHUDTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -554,11 +721,11 @@
 		};
 		364C1F7226219EBE00417AA0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 11FA56C43FFE1279CCF36DAC /* Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QH95759TSS;
 				INFOPLIST_FILE = TFYProgressSwiftHUDUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -574,11 +741,11 @@
 		};
 		364C1F7326219EBE00417AA0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2DE79D734F81DAA3594B660D /* Pods-TFYProgressSwiftHUD-TFYProgressSwiftHUDUITests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QH95759TSS;
 				INFOPLIST_FILE = TFYProgressSwiftHUDUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

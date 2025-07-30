@@ -1,0 +1,6 @@
+framework module Pods_TFYProgressSwiftHUDTests {
+  umbrella header "Pods-TFYProgressSwiftHUDTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
