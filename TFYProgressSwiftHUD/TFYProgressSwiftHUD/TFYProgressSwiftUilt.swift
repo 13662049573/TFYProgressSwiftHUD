@@ -8,42 +8,89 @@
 import Foundation
 import UIKit
 
-///动画1 设置
-func animationSystemActivityIndicator(_ view:UIView,color:UIColor) {
-    let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+// MARK: - 动画常量定义
+private enum AnimationConstants {
+    // 动画时长
+    static let defaultDuration: CFTimeInterval = 1.0
+    static let strokeDuration: CFTimeInterval = 0.25
+    static let iconDuration: CFTimeInterval = 0.15
+    
+    // 动画大小
+    static let spinnerScale: CGFloat = 1.6
+    static let circleLineWidth: CGFloat = 3
+    static let iconLineWidth: CGFloat = 9
+    static let strokeLineWidth: CGFloat = 7
+    
+    // 布局间距
+    static let defaultSpacing: CGFloat = 3
+    
+    // 图标位置比例
+    static let iconCheckStart: (x: CGFloat, y: CGFloat) = (0.15, 0.50)
+    static let iconCheckMid: (x: CGFloat, y: CGFloat) = (0.5, 0.80)
+    static let iconCheckEnd: (x: CGFloat, y: CGFloat) = (1.0, 0.25)
+    
+    static let iconCrossStart1: (x: CGFloat, y: CGFloat) = (0.15, 0.15)
+    static let iconCrossEnd1: (x: CGFloat, y: CGFloat) = (0.85, 0.85)
+    static let iconCrossStart2: (x: CGFloat, y: CGFloat) = (0.15, 0.85)
+    static let iconCrossEnd2: (x: CGFloat, y: CGFloat) = (0.85, 0.15)
+    
+    static let iconPlusStart1: (x: CGFloat, y: CGFloat) = (0.1, 0.5)
+    static let iconPlusEnd1: (x: CGFloat, y: CGFloat) = (0.9, 0.5)
+    static let iconPlusStart2: (x: CGFloat, y: CGFloat) = (0.5, 0.1)
+    static let iconPlusEnd2: (x: CGFloat, y: CGFloat) = (0.5, 0.9)
+}
+
+// MARK: - 加载动画
+///动画1 设置 - 系统活动指示器
+func animationSystemActivityIndicator(_ view: UIView, color: UIColor) {
+    let spinner = UIActivityIndicatorView(style: .large)
     spinner.frame = view.bounds
     spinner.color = color
     spinner.hidesWhenStopped = true
     spinner.startAnimating()
-    spinner.transform = CGAffineTransform(scaleX: 1.6, y: 1.6)
+    spinner.transform = CGAffineTransform(
+        scaleX: AnimationConstants.spinnerScale,
+        y: AnimationConstants.spinnerScale
+    )
     view.addSubview(spinner)
 }
 
-///动画2 设置
-func animationHorizontalCirclesPulsc(_ view:UIView,color:UIColor) {
+///动画2 设置 - 水平圆圈脉冲
+func animationHorizontalCirclesPulse(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-    let spacing:CGFloat = 3
-    let radius:CGFloat = (width - spacing * 2)/3
-    let ypos:CGFloat = (height - radius)/2
+    let spacing = AnimationConstants.defaultSpacing
+    let radius = (width - spacing * 2) / 3
+    let yPos = (height - radius) / 2
     
     let beginTime = CACurrentMediaTime()
-    let beginTimes = [0.36,0.24,0.12]
+    let beginTimes = [0.36, 0.24, 0.12]
     let timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.68, 0.18, 1.08)
     
     let animation = CAKeyframeAnimation(keyPath: "transform.scale")
-    animation.keyTimes = [0,0.5,1]
-    animation.timingFunctions = [timingFunction,timingFunction]
-    animation.values = [1,0.3,1]
-    animation.duration = 1
-    animation.repeatCount = HUGE
+    animation.keyTimes = [0, 0.5, 1]
+    animation.timingFunctions = [timingFunction, timingFunction]
+    animation.values = [1, 0.3, 1]
+    animation.duration = AnimationConstants.defaultDuration
+    animation.repeatCount = .infinity
     animation.isRemovedOnCompletion = false
     
-    let path = UIBezierPath(arcCenter: CGPoint(x: radius/2, y: radius/2), radius: radius/2, startAngle: 0, endAngle: 2 * .pi, clockwise: false)
+    let path = UIBezierPath(
+        arcCenter: CGPoint(x: radius / 2, y: radius / 2),
+        radius: radius / 2,
+        startAngle: 0,
+        endAngle: 2 * .pi,
+        clockwise: false
+    )
     
     for i in 0..<3 {
         let layer = CAShapeLayer()
-        layer.frame = CGRect(x: (radius + spacing) * CGFloat(i), y: ypos, width: radius, height: radius)
+        layer.frame = CGRect(
+            x: (radius + spacing) * CGFloat(i),
+            y: yPos,
+            width: radius,
+            height: radius
+        )
         layer.path = path.cgPath
         layer.fillColor = color.cgColor
         animation.beginTime = beginTime - beginTimes[i]
@@ -51,46 +98,51 @@ func animationHorizontalCirclesPulsc(_ view:UIView,color:UIColor) {
         view.layer.addSublayer(layer)
     }
 }
-///动画3 设置
-func animationLineScaling(_ view:UIView,color:UIColor) {
+///动画3 设置 - 线条缩放
+func animationLineScaling(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-    let lineWidth = width/9
+    let lineWidth = width / 9
     
     let beginTime = CACurrentMediaTime()
-    let beginTimes = [0.5,0.4,0.3,0.2,0.1]
+    let beginTimes = [0.5, 0.4, 0.3, 0.2, 0.1]
     let timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.68, 0.18, 1.08)
     
     let animation = CAKeyframeAnimation(keyPath: "transform.scale.y")
-    animation.keyTimes = [0,0.5,1]
-    animation.timingFunctions = [timingFunction,timingFunction]
-    animation.values = [1,0.4,1]
-    animation.duration = 1
-    animation.repeatCount = HUGE
+    animation.keyTimes = [0, 0.5, 1]
+    animation.timingFunctions = [timingFunction, timingFunction]
+    animation.values = [1, 0.4, 1]
+    animation.duration = AnimationConstants.defaultDuration
+    animation.repeatCount = .infinity
     animation.isRemovedOnCompletion = false
     
-    let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: lineWidth, height: height), cornerRadius: width/2)
+    let path = UIBezierPath(
+        roundedRect: CGRect(x: 0, y: 0, width: lineWidth, height: height),
+        cornerRadius: width / 2
+    )
     
     for i in 0..<5 {
         let layer = CAShapeLayer()
-        layer.frame = CGRect(x: lineWidth * 2 * CGFloat(i), y: 0, width: lineWidth, height: height)
+        layer.frame = CGRect(
+            x: lineWidth * 2 * CGFloat(i),
+            y: 0,
+            width: lineWidth,
+            height: height
+        )
         layer.path = path.cgPath
         layer.backgroundColor = nil
         layer.fillColor = color.cgColor
         
         animation.beginTime = beginTime - beginTimes[i]
-        
         layer.add(animation, forKey: "animation")
         view.layer.addSublayer(layer)
     }
 }
-///动画4 设置
-func animationSingleCirclePulse(_ view: UIView,color:UIColor) {
-
+///动画4 设置 - 单圆脉冲
+func animationSingleCirclePulse(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-
-    let duration: CFTimeInterval = 1.0
+    let duration = AnimationConstants.defaultDuration
 
     let animationScale = CABasicAnimation(keyPath: "transform.scale")
     animationScale.duration = duration
@@ -106,10 +158,16 @@ func animationSingleCirclePulse(_ view: UIView,color:UIColor) {
     animation.animations = [animationScale, animationOpacity]
     animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
     animation.duration = duration
-    animation.repeatCount = HUGE
+    animation.repeatCount = .infinity
     animation.isRemovedOnCompletion = false
 
-    let path = UIBezierPath(arcCenter: CGPoint(x: width/2, y: height/2), radius: width/2, startAngle: 0, endAngle: 2 * .pi, clockwise: false)
+    let path = UIBezierPath(
+        arcCenter: CGPoint(x: width / 2, y: height / 2),
+        radius: width / 2,
+        startAngle: 0,
+        endAngle: 2 * .pi,
+        clockwise: false
+    )
 
     let layer = CAShapeLayer()
     layer.frame = CGRect(x: 0, y: 0, width: width, height: height)
@@ -119,15 +177,13 @@ func animationSingleCirclePulse(_ view: UIView,color:UIColor) {
     layer.add(animation, forKey: "animation")
     view.layer.addSublayer(layer)
 }
-///动画5 设置
-func animationMultipleCirclePulse(_ view: UIView,color:UIColor) {
-
+///动画5 设置 - 多圆脉冲
+func animationMultipleCirclePulse(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-
-    let duration = 1.0
+    let duration = AnimationConstants.defaultDuration
     let beginTime = CACurrentMediaTime()
-    let beginTimes = [0, 0.3, 0.6]
+    let beginTimes = [0.0, 0.3, 0.6]
 
     let animationScale = CABasicAnimation(keyPath: "transform.scale")
     animationScale.duration = duration
@@ -143,10 +199,16 @@ func animationMultipleCirclePulse(_ view: UIView,color:UIColor) {
     animation.animations = [animationScale, animationOpacity]
     animation.timingFunction = CAMediaTimingFunction(name: .linear)
     animation.duration = duration
-    animation.repeatCount = HUGE
+    animation.repeatCount = .infinity
     animation.isRemovedOnCompletion = false
 
-    let path = UIBezierPath(arcCenter: CGPoint(x: width/2, y: height/2), radius: width/2, startAngle: 0, endAngle: 2 * .pi, clockwise: false)
+    let path = UIBezierPath(
+        arcCenter: CGPoint(x: width / 2, y: height / 2),
+        radius: width / 2,
+        startAngle: 0,
+        endAngle: 2 * .pi,
+        clockwise: false
+    )
 
     for i in 0..<3 {
         let layer = CAShapeLayer()
@@ -154,20 +216,17 @@ func animationMultipleCirclePulse(_ view: UIView,color:UIColor) {
         layer.path = path.cgPath
         layer.fillColor = color.cgColor
         layer.opacity = 0
-
+        
         animation.beginTime = beginTime + beginTimes[i]
-
         layer.add(animation, forKey: "animation")
         view.layer.addSublayer(layer)
     }
 }
-///动画6 设置
-func animationSingleCircleScaleRipple(_ view: UIView,color:UIColor) {
-
+///动画6 设置 - 单圆缩放波纹
+func animationSingleCircleScaleRipple(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-
-    let duration: CFTimeInterval = 1.0
+    let duration = AnimationConstants.defaultDuration
     let timingFunction = CAMediaTimingFunction(controlPoints: 0.21, 0.53, 0.56, 0.8)
 
     let animationScale = CAKeyframeAnimation(keyPath: "transform.scale")
@@ -185,10 +244,16 @@ func animationSingleCircleScaleRipple(_ view: UIView,color:UIColor) {
     let animation = CAAnimationGroup()
     animation.animations = [animationScale, animationOpacity]
     animation.duration = duration
-    animation.repeatCount = HUGE
+    animation.repeatCount = .infinity
     animation.isRemovedOnCompletion = false
 
-    let path = UIBezierPath(arcCenter: CGPoint(x: width/2, y: height/2), radius: width/2, startAngle: 0, endAngle: 2 * .pi, clockwise: false)
+    let path = UIBezierPath(
+        arcCenter: CGPoint(x: width / 2, y: height / 2),
+        radius: width / 2,
+        startAngle: 0,
+        endAngle: 2 * .pi,
+        clockwise: false
+    )
 
     let layer = CAShapeLayer()
     layer.frame = CGRect(x: 0, y: 0, width: width, height: height)
@@ -196,20 +261,18 @@ func animationSingleCircleScaleRipple(_ view: UIView,color:UIColor) {
     layer.backgroundColor = nil
     layer.fillColor = nil
     layer.strokeColor = color.cgColor
-    layer.lineWidth = 3
+    layer.lineWidth = AnimationConstants.circleLineWidth
 
     layer.add(animation, forKey: "animation")
     view.layer.addSublayer(layer)
 }
-///动画7 设置
-func animationMultipleCircleScaleRipple(_ view: UIView,color:UIColor) {
-
+///动画7 设置 - 多圆缩放波纹
+func animationMultipleCircleScaleRipple(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-
-    let duration = 1.25
+    let duration: CFTimeInterval = 1.25
     let beginTime = CACurrentMediaTime()
-    let beginTimes = [0, 0.2, 0.4]
+    let beginTimes = [0.0, 0.2, 0.4]
     let timingFunction = CAMediaTimingFunction(controlPoints: 0.21, 0.53, 0.56, 0.8)
 
     let animationScale = CAKeyframeAnimation(keyPath: "transform.scale")
@@ -227,10 +290,16 @@ func animationMultipleCircleScaleRipple(_ view: UIView,color:UIColor) {
     let animation = CAAnimationGroup()
     animation.animations = [animationScale, animationOpacity]
     animation.duration = duration
-    animation.repeatCount = HUGE
+    animation.repeatCount = .infinity
     animation.isRemovedOnCompletion = false
 
-    let path = UIBezierPath(arcCenter: CGPoint(x: width/2, y: height/2), radius: width/2, startAngle: 0, endAngle: 2 * .pi, clockwise: false)
+    let path = UIBezierPath(
+        arcCenter: CGPoint(x: width / 2, y: height / 2),
+        radius: width / 2,
+        startAngle: 0,
+        endAngle: 2 * .pi,
+        clockwise: false
+    )
 
     for i in 0..<3 {
         let layer = CAShapeLayer()
@@ -238,25 +307,21 @@ func animationMultipleCircleScaleRipple(_ view: UIView,color:UIColor) {
         layer.path = path.cgPath
         layer.backgroundColor = nil
         layer.strokeColor = color.cgColor
-        layer.lineWidth = 3
+        layer.lineWidth = AnimationConstants.circleLineWidth
         layer.fillColor = nil
-
+        
         animation.beginTime = beginTime + beginTimes[i]
-
         layer.add(animation, forKey: "animation")
         view.layer.addSublayer(layer)
     }
 }
-///动画8 设置
-func animationCircleSpinFade(_ view: UIView,color:UIColor) {
-
+///动画8 设置 - 圆圈旋转淡出
+func animationCircleSpinFade(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
-
-    let spacing: CGFloat = 3
+    let spacing = AnimationConstants.defaultSpacing
     let radius = (width - 4 * spacing) / 3.5
     let radiusX = (width - radius) / 2
-
-    let duration = 1.0
+    let duration = AnimationConstants.defaultDuration
     let beginTime = CACurrentMediaTime()
     let beginTimes: [CFTimeInterval] = [0.84, 0.72, 0.6, 0.48, 0.36, 0.24, 0.12, 0]
 
@@ -274,39 +339,45 @@ func animationCircleSpinFade(_ view: UIView,color:UIColor) {
     animation.animations = [animationScale, animationOpacity]
     animation.timingFunction = CAMediaTimingFunction(name: .linear)
     animation.duration = duration
-    animation.repeatCount = HUGE
+    animation.repeatCount = .infinity
     animation.isRemovedOnCompletion = false
 
-    let path = UIBezierPath(arcCenter: CGPoint(x: radius/2, y: radius/2), radius: radius/2, startAngle: 0, endAngle: 2 * .pi, clockwise: false)
+    let path = UIBezierPath(
+        arcCenter: CGPoint(x: radius / 2, y: radius / 2),
+        radius: radius / 2,
+        startAngle: 0,
+        endAngle: 2 * .pi,
+        clockwise: false
+    )
 
     for i in 0..<8 {
         let angle = .pi / 4 * CGFloat(i)
-
         let layer = CAShapeLayer()
         layer.path = path.cgPath
         layer.fillColor = color.cgColor
         layer.backgroundColor = nil
-        layer.frame = CGRect(x: radiusX * (cos(angle) + 1), y: radiusX * (sin(angle) + 1), width: radius, height: radius)
-
+        layer.frame = CGRect(
+            x: radiusX * (cos(angle) + 1),
+            y: radiusX * (sin(angle) + 1),
+            width: radius,
+            height: radius
+        )
+        
         animation.beginTime = beginTime - beginTimes[i]
-
         layer.add(animation, forKey: "animation")
         view.layer.addSublayer(layer)
     }
 }
-///动画9 设置
-func animationLineSpinFade(_ view: UIView,color:UIColor) {
-
+///动画9 设置 - 线条旋转淡出
+func animationLineSpinFade(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-
-    let spacing: CGFloat = 3
+    let spacing = AnimationConstants.defaultSpacing
     let lineWidth = (width - 4 * spacing) / 5
     let lineHeight = (height - 2 * spacing) / 3
     let containerSize = max(lineWidth, lineHeight)
     let radius = width / 2 - containerSize / 2
-
-    let duration = 1.2
+    let duration: CFTimeInterval = 1.2
     let beginTime = CACurrentMediaTime()
     let beginTimes: [CFTimeInterval] = [0.96, 0.84, 0.72, 0.6, 0.48, 0.36, 0.24, 0.12]
     let timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
@@ -316,46 +387,67 @@ func animationLineSpinFade(_ view: UIView,color:UIColor) {
     animation.timingFunctions = [timingFunction, timingFunction]
     animation.values = [1, 0.3, 1]
     animation.duration = duration
-    animation.repeatCount = HUGE
+    animation.repeatCount = .infinity
     animation.isRemovedOnCompletion = false
 
-    let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: lineWidth, height: lineHeight), cornerRadius: lineWidth/2)
+    let path = UIBezierPath(
+        roundedRect: CGRect(x: 0, y: 0, width: lineWidth, height: lineHeight),
+        cornerRadius: lineWidth / 2
+    )
 
     for i in 0..<8 {
         let angle = .pi / 4 * CGFloat(i)
-
+        
         let line = CAShapeLayer()
-        line.frame = CGRect(x: (containerSize-lineWidth)/2, y: (containerSize-lineHeight)/2, width: lineWidth, height: lineHeight)
+        line.frame = CGRect(
+            x: (containerSize - lineWidth) / 2,
+            y: (containerSize - lineHeight) / 2,
+            width: lineWidth,
+            height: lineHeight
+        )
         line.path = path.cgPath
         line.backgroundColor = nil
         line.fillColor = color.cgColor
 
         let container = CALayer()
-        container.frame = CGRect(x: radius * (cos(angle) + 1), y: radius * (sin(angle) + 1), width: containerSize, height: containerSize)
+        container.frame = CGRect(
+            x: radius * (cos(angle) + 1),
+            y: radius * (sin(angle) + 1),
+            width: containerSize,
+            height: containerSize
+        )
         container.addSublayer(line)
         container.sublayerTransform = CATransform3DMakeRotation(.pi / 2 + angle, 0, 0, 1)
-
+        
         animation.beginTime = beginTime - beginTimes[i]
-
         container.add(animation, forKey: "animation")
         view.layer.addSublayer(container)
     }
 }
-///动画10 设置
-func animationCircleRotateChase(_ view: UIView,color:UIColor) {
-
+///动画10 设置 - 圆圈旋转追逐
+func animationCircleRotateChase(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-
-    let spacing: CGFloat = 3
+    let spacing = AnimationConstants.defaultSpacing
     let radius = (width - 4 * spacing) / 3.5
     let radiusX = (width - radius) / 2
-
     let duration: CFTimeInterval = 1.5
 
-    let path = UIBezierPath(arcCenter: CGPoint(x: radius/2, y: radius/2), radius: radius/2, startAngle: 0, endAngle: 2 * .pi, clockwise: false)
+    let path = UIBezierPath(
+        arcCenter: CGPoint(x: radius / 2, y: radius / 2),
+        radius: radius / 2,
+        startAngle: 0,
+        endAngle: 2 * .pi,
+        clockwise: false
+    )
 
-    let pathPosition = UIBezierPath(arcCenter: CGPoint(x: width/2, y: height/2), radius: radiusX, startAngle: 1.5 * .pi, endAngle: 3.5 * .pi, clockwise: true)
+    let pathPosition = UIBezierPath(
+        arcCenter: CGPoint(x: width / 2, y: height / 2),
+        radius: radiusX,
+        startAngle: 1.5 * .pi,
+        endAngle: 3.5 * .pi,
+        clockwise: true
+    )
 
     for i in 0..<5 {
         let rate = Float(i) * 1 / 5
@@ -365,20 +457,20 @@ func animationCircleRotateChase(_ view: UIView,color:UIColor) {
 
         let animationScale = CABasicAnimation(keyPath: "transform.scale")
         animationScale.duration = duration
-        animationScale.repeatCount = HUGE
+        animationScale.repeatCount = .infinity
         animationScale.fromValue = fromScale
         animationScale.toValue = toScale
 
         let animationPosition = CAKeyframeAnimation(keyPath: "position")
         animationPosition.duration = duration
-        animationPosition.repeatCount = HUGE
+        animationPosition.repeatCount = .infinity
         animationPosition.path = pathPosition.cgPath
 
         let animation = CAAnimationGroup()
         animation.animations = [animationScale, animationPosition]
         animation.timingFunction = timeFunc
         animation.duration = duration
-        animation.repeatCount = HUGE
+        animation.repeatCount = .infinity
         animation.isRemovedOnCompletion = false
 
         let layer = CAShapeLayer()
@@ -390,12 +482,10 @@ func animationCircleRotateChase(_ view: UIView,color:UIColor) {
         view.layer.addSublayer(layer)
     }
 }
-///动画11 设置
-func animationCircleStrokeSpin(_ view: UIView,color:UIColor) {
-
+///动画11 设置 - 圆圈描边旋转
+func animationCircleStrokeSpin(_ view: UIView, color: UIColor) {
     let width = view.frame.size.width
     let height = view.frame.size.height
-
     let beginTime: Double = 0.5
     let durationStart: Double = 1.2
     let durationStop: Double = 0.7
@@ -424,32 +514,48 @@ func animationCircleStrokeSpin(_ view: UIView,color:UIColor) {
     animation.isRemovedOnCompletion = false
     animation.fillMode = .forwards
 
-    let path = UIBezierPath(arcCenter: CGPoint(x: width/2, y: height/2), radius: width/2, startAngle: -0.5 * .pi, endAngle: 1.5 * .pi, clockwise: true)
+    let path = UIBezierPath(
+        arcCenter: CGPoint(x: width / 2, y: height / 2),
+        radius: width / 2,
+        startAngle: -0.5 * .pi,
+        endAngle: 1.5 * .pi,
+        clockwise: true
+    )
 
     let layer = CAShapeLayer()
     layer.frame = CGRect(x: 0, y: 0, width: width, height: height)
     layer.path = path.cgPath
     layer.fillColor = nil
     layer.strokeColor = color.cgColor
-    layer.lineWidth = 3
+    layer.lineWidth = AnimationConstants.circleLineWidth
 
     layer.add(animation, forKey: "animation")
     view.layer.addSublayer(layer)
 }
 
-///图片动画 1
-func animatedIconSucceed(_ view: UIView,color:UIColor,alpha:CGFloat) {
+// MARK: - 图标动画
 
+///图标动画 1 - 成功（打勾）
+func animatedIconSucceed(_ view: UIView, color: UIColor, alpha: CGFloat) {
     let length = view.frame.width
-    let delay = (alpha == 0) ? 0.25 : 0.0
+    let delay = (alpha == 0) ? AnimationConstants.strokeDuration : 0.0
 
     let path = UIBezierPath()
-    path.move(to: CGPoint(x: length * 0.15, y: length * 0.50))
-    path.addLine(to: CGPoint(x: length * 0.5, y: length * 0.80))
-    path.addLine(to: CGPoint(x: length * 1.0, y: length * 0.25))
+    path.move(to: CGPoint(
+        x: length * AnimationConstants.iconCheckStart.x,
+        y: length * AnimationConstants.iconCheckStart.y
+    ))
+    path.addLine(to: CGPoint(
+        x: length * AnimationConstants.iconCheckMid.x,
+        y: length * AnimationConstants.iconCheckMid.y
+    ))
+    path.addLine(to: CGPoint(
+        x: length * AnimationConstants.iconCheckEnd.x,
+        y: length * AnimationConstants.iconCheckEnd.y
+    ))
 
     let animation = CABasicAnimation(keyPath: "strokeEnd")
-    animation.duration = 0.25
+    animation.duration = AnimationConstants.strokeDuration
     animation.fromValue = 0
     animation.toValue = 1
     animation.fillMode = .forwards
@@ -460,7 +566,7 @@ func animatedIconSucceed(_ view: UIView,color:UIColor,alpha:CGFloat) {
     layer.path = path.cgPath
     layer.fillColor = UIColor.clear.cgColor
     layer.strokeColor = color.cgColor
-    layer.lineWidth = 9
+    layer.lineWidth = AnimationConstants.iconLineWidth
     layer.lineCap = .round
     layer.lineJoin = .round
     layer.strokeEnd = 0
@@ -468,25 +574,36 @@ func animatedIconSucceed(_ view: UIView,color:UIColor,alpha:CGFloat) {
     layer.add(animation, forKey: "animation")
     view.layer.addSublayer(layer)
 }
-///图片动画 2
-func animatedIconFailed(_ view: UIView,color:UIColor,alpha:CGFloat) {
-
+///图标动画 2 - 失败（叉号）
+func animatedIconFailed(_ view: UIView, color: UIColor, alpha: CGFloat) {
     let length = view.frame.width
-    let delay = (alpha == 0) ? 0.25 : 0.0
+    let delay = (alpha == 0) ? AnimationConstants.strokeDuration : 0.0
 
     let path1 = UIBezierPath()
     let path2 = UIBezierPath()
 
-    path1.move(to: CGPoint(x: length * 0.15, y: length * 0.15))
-    path2.move(to: CGPoint(x: length * 0.15, y: length * 0.85))
+    path1.move(to: CGPoint(
+        x: length * AnimationConstants.iconCrossStart1.x,
+        y: length * AnimationConstants.iconCrossStart1.y
+    ))
+    path2.move(to: CGPoint(
+        x: length * AnimationConstants.iconCrossStart2.x,
+        y: length * AnimationConstants.iconCrossStart2.y
+    ))
 
-    path1.addLine(to: CGPoint(x: length * 0.85, y: length * 0.85))
-    path2.addLine(to: CGPoint(x: length * 0.85, y: length * 0.15))
+    path1.addLine(to: CGPoint(
+        x: length * AnimationConstants.iconCrossEnd1.x,
+        y: length * AnimationConstants.iconCrossEnd1.y
+    ))
+    path2.addLine(to: CGPoint(
+        x: length * AnimationConstants.iconCrossEnd2.x,
+        y: length * AnimationConstants.iconCrossEnd2.y
+    ))
 
     let paths = [path1, path2]
 
     let animation = CABasicAnimation(keyPath: "strokeEnd")
-    animation.duration = 0.15
+    animation.duration = AnimationConstants.iconDuration
     animation.fromValue = 0
     animation.toValue = 1
     animation.fillMode = .forwards
@@ -497,36 +614,47 @@ func animatedIconFailed(_ view: UIView,color:UIColor,alpha:CGFloat) {
         layer.path = paths[i].cgPath
         layer.fillColor = UIColor.clear.cgColor
         layer.strokeColor = color.cgColor
-        layer.lineWidth = 9
+        layer.lineWidth = AnimationConstants.iconLineWidth
         layer.lineCap = .round
         layer.lineJoin = .round
         layer.strokeEnd = 0
 
-        animation.beginTime = CACurrentMediaTime() + 0.25 * Double(i) + delay
+        animation.beginTime = CACurrentMediaTime() + AnimationConstants.strokeDuration * Double(i) + delay
 
         layer.add(animation, forKey: "animation")
         view.layer.addSublayer(layer)
     }
 }
-///图片动画 3
-func animatedIconAdded(_ view: UIView,color:UIColor,alpha:CGFloat) {
-
+///图标动画 3 - 添加（加号）
+func animatedIconAdded(_ view: UIView, color: UIColor, alpha: CGFloat) {
     let length = view.frame.width
-    let delay = (alpha == 0) ? 0.25 : 0.0
+    let delay = (alpha == 0) ? AnimationConstants.strokeDuration : 0.0
 
     let path1 = UIBezierPath()
     let path2 = UIBezierPath()
 
-    path1.move(to: CGPoint(x: length * 0.1, y: length * 0.5))
-    path2.move(to: CGPoint(x: length * 0.5, y: length * 0.1))
+    path1.move(to: CGPoint(
+        x: length * AnimationConstants.iconPlusStart1.x,
+        y: length * AnimationConstants.iconPlusStart1.y
+    ))
+    path2.move(to: CGPoint(
+        x: length * AnimationConstants.iconPlusStart2.x,
+        y: length * AnimationConstants.iconPlusStart2.y
+    ))
 
-    path1.addLine(to: CGPoint(x: length * 0.9, y: length * 0.5))
-    path2.addLine(to: CGPoint(x: length * 0.5, y: length * 0.9))
+    path1.addLine(to: CGPoint(
+        x: length * AnimationConstants.iconPlusEnd1.x,
+        y: length * AnimationConstants.iconPlusEnd1.y
+    ))
+    path2.addLine(to: CGPoint(
+        x: length * AnimationConstants.iconPlusEnd2.x,
+        y: length * AnimationConstants.iconPlusEnd2.y
+    ))
 
     let paths = [path1, path2]
 
     let animation = CABasicAnimation(keyPath: "strokeEnd")
-    animation.duration = 0.15
+    animation.duration = AnimationConstants.iconDuration
     animation.fromValue = 0
     animation.toValue = 1
     animation.fillMode = .forwards
@@ -537,12 +665,12 @@ func animatedIconAdded(_ view: UIView,color:UIColor,alpha:CGFloat) {
         layer.path = paths[i].cgPath
         layer.fillColor = UIColor.clear.cgColor
         layer.strokeColor = color.cgColor
-        layer.lineWidth = 9
+        layer.lineWidth = AnimationConstants.iconLineWidth
         layer.lineCap = .round
         layer.lineJoin = .round
         layer.strokeEnd = 0
 
-        animation.beginTime = CACurrentMediaTime() + 0.25 * Double(i) + delay
+        animation.beginTime = CACurrentMediaTime() + AnimationConstants.strokeDuration * Double(i) + delay
 
         layer.add(animation, forKey: "animation")
         view.layer.addSublayer(layer)

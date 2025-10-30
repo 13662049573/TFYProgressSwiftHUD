@@ -79,19 +79,42 @@ extension AlertIcon {
 
 @available(iOS 15.0, *)
 public class TFYProgressSwiftHUD: UIView {
-    ///基本容器
-    private var viewBackground:UIView?
-    private var toolbarHUD:UIToolbar?
-    private var labelStatus:UILabel?
+    // MARK: - 常量定义
+    private enum LayoutConstants {
+        static let minHUDWidth: CGFloat = 120
+        static let minHUDHeight: CGFloat = 120
+        static let maxLabelWidth: CGFloat = 250
+        static let maxLabelHeight: CGFloat = 250
+        static let horizontalPadding: CGFloat = 60
+        static let verticalPadding: CGFloat = 120
+        static let labelOffsetY: CGFloat = 45
+        static let iconCenterY: CGFloat = 55
+        static let cornerRadius: CGFloat = 10
+        static let animationDuration: TimeInterval = 0.15
+        static let hudScaleTransform: CGFloat = 1.4
+        static let hideScaleTransform: CGFloat = 0.3
+        static let delayPerCharacter: Double = 0.03
+        static let baseDelay: Double = 1.25
+        
+        // iPad 适配
+        static let iPadMinWidth: CGFloat = 200
+        static let iPadMinHeight: CGFloat = 200
+    }
     
-    private var viewProgress:ProgressView?///自定义容器
-    private var viewAnimation:UIView?///动画容器
-    private var viewAnimatedIcon:UIView?///小图片动画容器
-    private var staticImageView:UIImageView?///图片容器
-    private var customView:UIView?///自定义view容器
+    // MARK: - 视图容器
+    private var viewBackground: UIView?
+    private var toolbarHUD: UIToolbar?
+    private var labelStatus: UILabel?
+    
+    private var viewProgress: ProgressView?  /// 进度视图容器
+    private var viewAnimation: UIView?       /// 动画容器
+    private var viewAnimatedIcon: UIView?    /// 动画图标容器
+    private var staticImageView: UIImageView? /// 静态图片容器
+    private var customView: UIView?          /// 自定义view容器
 
-    private var timer:Timer?///定时器
-    ///动画类型
+    private var timer: Timer?  /// 定时器
+    
+    // MARK: - 配置属性
     private var animationType = AnimationType.systemActivityIndicator
     ///颜色默认设置
     private var colorBackground = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)
@@ -194,9 +217,9 @@ public class TFYProgressSwiftHUD: UIView {
         
         hudShow()
 
-        if (hide) {
+        if hide {
             let text = labelStatus?.text ?? ""
-            let delay = Double(text.count) * 0.03 + 1.25
+            let delay = Double(text.count) * LayoutConstants.delayPerCharacter + LayoutConstants.baseDelay
             timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
                 self.hudHide()
             }
@@ -207,51 +230,93 @@ public class TFYProgressSwiftHUD: UIView {
         timer?.invalidate()
         timer = nil
         
-        if (self.alpha != 1) {
-            self.alpha = 1
-            toolbarHUD?.alpha = 0
-            toolbarHUD?.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
+        guard self.alpha != 1 else { return }
+        
+        self.alpha = 1
+        toolbarHUD?.alpha = 0
+        toolbarHUD?.transform = CGAffineTransform(
+            scaleX: LayoutConstants.hudScaleTransform,
+            y: LayoutConstants.hudScaleTransform
+        )
 
-            UIView.animate(withDuration: 0.15, delay: 0, options: [.allowUserInteraction, .curveEaseIn], animations: {
-                self.toolbarHUD?.transform = CGAffineTransform(scaleX: 1/1.4, y: 1/1.4)
+        UIView.animate(
+            withDuration: LayoutConstants.animationDuration,
+            delay: 0,
+            options: [.allowUserInteraction, .curveEaseIn],
+            animations: {
+                self.toolbarHUD?.transform = CGAffineTransform(
+                    scaleX: 1 / LayoutConstants.hudScaleTransform,
+                    y: 1 / LayoutConstants.hudScaleTransform
+                )
                 self.toolbarHUD?.alpha = 1
-            }, completion: nil)
-        }
+            },
+            completion: nil
+        )
     }
     ///隐藏视图
     private func hudHide() {
-
-        if (self.alpha == 1) {
-            UIView.animate(withDuration: 0.15, delay: 0, options: [.allowUserInteraction, .curveEaseIn], animations: {
-                self.toolbarHUD?.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+        guard self.alpha == 1 else { return }
+        
+        UIView.animate(
+            withDuration: LayoutConstants.animationDuration,
+            delay: 0,
+            options: [.allowUserInteraction, .curveEaseIn],
+            animations: {
+                self.toolbarHUD?.transform = CGAffineTransform(
+                    scaleX: LayoutConstants.hideScaleTransform,
+                    y: LayoutConstants.hideScaleTransform
+                )
                 self.toolbarHUD?.alpha = 0
-            }, completion: { isFinished in
+            },
+            completion: { _ in
                 self.hudDestroy()
                 self.alpha = 0
-            })
-        }
+            }
+        )
     }
-    ///清楚所有
+    ///清除所有资源
     private func hudDestroy() {
-
+        // 移除通知观察者
         NotificationCenter.default.removeObserver(self)
-
-        staticImageView?.removeFromSuperview();        staticImageView = nil
-        viewAnimatedIcon?.removeFromSuperview();    viewAnimatedIcon = nil
-        viewAnimation?.removeFromSuperview();        viewAnimation = nil
-        viewProgress?.removeFromSuperview();        viewProgress = nil
-        customView?.removeFromSuperview();            customView = nil
-
-        labelStatus?.removeFromSuperview();            labelStatus = nil
-        toolbarHUD?.removeFromSuperview();            toolbarHUD = nil
-        viewBackground?.removeFromSuperview();        viewBackground = nil
-
+        
+        // 清理定时器
         timer?.invalidate()
         timer = nil
         
-        // 清理动画层
-        viewAnimation?.layer.sublayers?.forEach { $0.removeAllAnimations() }
-        viewAnimatedIcon?.layer.sublayers?.forEach { $0.removeAllAnimations() }
+        // 清理动画层（在移除视图之前）
+        viewAnimation?.layer.sublayers?.forEach { layer in
+            layer.removeAllAnimations()
+            layer.removeFromSuperlayer()
+        }
+        viewAnimatedIcon?.layer.sublayers?.forEach { layer in
+            layer.removeAllAnimations()
+            layer.removeFromSuperlayer()
+        }
+        
+        // 移除视图并释放引用
+        staticImageView?.removeFromSuperview()
+        staticImageView = nil
+        
+        viewAnimatedIcon?.removeFromSuperview()
+        viewAnimatedIcon = nil
+        
+        viewAnimation?.removeFromSuperview()
+        viewAnimation = nil
+        
+        viewProgress?.removeFromSuperview()
+        viewProgress = nil
+        
+        customView?.removeFromSuperview()
+        customView = nil
+        
+        labelStatus?.removeFromSuperview()
+        labelStatus = nil
+        
+        toolbarHUD?.removeFromSuperview()
+        toolbarHUD = nil
+        
+        viewBackground?.removeFromSuperview()
+        viewBackground = nil
     }
     ///添加监听
     private func setupNotifications() {
@@ -294,10 +359,10 @@ public class TFYProgressSwiftHUD: UIView {
     ///添加加载视图容器
     private func setupToolbar() {
         if toolbarHUD == nil {
-            toolbarHUD = UIToolbar(frame: CGRect.zero)
+            toolbarHUD = UIToolbar(frame: .zero)
             toolbarHUD?.isTranslucent = true
             toolbarHUD?.clipsToBounds = true
-            toolbarHUD?.layer.cornerRadius = 10
+            toolbarHUD?.layer.cornerRadius = LayoutConstants.cornerRadius
             toolbarHUD?.layer.masksToBounds = true
             toolbarHUD?.isOpaque = false
             toolbarHUD?.clearsContextBeforeDrawing = true
@@ -359,25 +424,37 @@ public class TFYProgressSwiftHUD: UIView {
             toolbarHUD?.addSubview(viewAnimation!)
         }
         
-        viewAnimation?.subviews.forEach {
-            $0.removeFromSuperview()
-        }
+        // 清理旧的动画
+        viewAnimation?.subviews.forEach { $0.removeFromSuperview() }
+        viewAnimation?.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
         
-        viewAnimation?.layer.sublayers?.forEach {
-            $0.removeFromSuperlayer()
-        }
+        // 根据动画类型创建对应动画
+        guard let animation = viewAnimation else { return }
         
-        if (animationType == .systemActivityIndicator)   { animationSystemActivityIndicator(viewAnimation!,color: colorAnimation)   }
-        if (animationType == .horizontalCirclesPulse)    { animationHorizontalCirclesPulsc(viewAnimation!,color: colorAnimation)    }
-        if (animationType == .lineScaling)               { animationLineScaling(viewAnimation!,color: colorAnimation)               }
-        if (animationType == .singleCirclePulse)         { animationSingleCirclePulse(viewAnimation!,color: colorAnimation)         }
-        if (animationType == .multipleCirclePulse)       { animationMultipleCirclePulse(viewAnimation!,color: colorAnimation)       }
-        if (animationType == .singleCircleScaleRipple)   { animationSingleCircleScaleRipple(viewAnimation!,color: colorAnimation)   }
-        if (animationType == .multipleCircleScaleRipple) { animationMultipleCircleScaleRipple(viewAnimation!,color: colorAnimation) }
-        if (animationType == .circleSpinFade)            { animationCircleSpinFade(viewAnimation!,color: colorAnimation)            }
-        if (animationType == .lineSpinFade)              { animationLineSpinFade(viewAnimation!,color: colorAnimation)              }
-        if (animationType == .circleRotateChase)         { animationCircleRotateChase(viewAnimation!,color: colorAnimation)         }
-        if (animationType == .circleStrokeSpin)          { animationCircleStrokeSpin(viewAnimation!,color: colorAnimation)          }
+        switch animationType {
+        case .systemActivityIndicator:
+            animationSystemActivityIndicator(animation, color: colorAnimation)
+        case .horizontalCirclesPulse:
+            animationHorizontalCirclesPulse(animation, color: colorAnimation)
+        case .lineScaling:
+            animationLineScaling(animation, color: colorAnimation)
+        case .singleCirclePulse:
+            animationSingleCirclePulse(animation, color: colorAnimation)
+        case .multipleCirclePulse:
+            animationMultipleCirclePulse(animation, color: colorAnimation)
+        case .singleCircleScaleRipple:
+            animationSingleCircleScaleRipple(animation, color: colorAnimation)
+        case .multipleCircleScaleRipple:
+            animationMultipleCircleScaleRipple(animation, color: colorAnimation)
+        case .circleSpinFade:
+            animationCircleSpinFade(animation, color: colorAnimation)
+        case .lineSpinFade:
+            animationLineSpinFade(animation, color: colorAnimation)
+        case .circleRotateChase:
+            animationCircleRotateChase(animation, color: colorAnimation)
+        case .circleStrokeSpin:
+            animationCircleStrokeSpin(animation, color: colorAnimation)
+        }
     }
     
     private func setupAnimatedIcon(_ animatedIcon:AnimatedIcon?) {
@@ -390,18 +467,24 @@ public class TFYProgressSwiftHUD: UIView {
             viewAnimatedIcon = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
         }
         
-        if (viewAnimatedIcon?.superview == nil) {
+        if viewAnimatedIcon?.superview == nil {
             toolbarHUD?.addSubview(viewAnimatedIcon!)
         }
         
-        viewAnimatedIcon?.layer.sublayers?.forEach {
-            $0.removeAllAnimations()
-        }
+        // 清理旧的动画
+        viewAnimatedIcon?.layer.sublayers?.forEach { $0.removeAllAnimations() }
         
-        if (animatedIcon == .succeed)   { animatedIconSucceed(viewAnimatedIcon!,color: colorAnimation,alpha:self.alpha) }
-        if (animatedIcon == .failed)    { animatedIconFailed(viewAnimatedIcon!,color: colorAnimation,alpha: self.alpha)  }
-        if (animatedIcon == .added)     { animatedIconAdded(viewAnimatedIcon!,color: colorAnimation,alpha: self.alpha)   }
-
+        // 根据图标类型创建对应动画
+        guard let icon = animatedIcon, let iconView = viewAnimatedIcon else { return }
+        
+        switch icon {
+        case .succeed:
+            animatedIconSucceed(iconView, color: colorAnimation, alpha: self.alpha)
+        case .failed:
+            animatedIconFailed(iconView, color: colorAnimation, alpha: self.alpha)
+        case .added:
+            animatedIconAdded(iconView, color: colorAnimation, alpha: self.alpha)
+        }
     }
     ///添加图片容器
     private func setupStaticImage(_ staticImage: UIImage?) {
@@ -410,16 +493,16 @@ public class TFYProgressSwiftHUD: UIView {
         viewAnimatedIcon?.removeFromSuperview()
         customView?.removeFromSuperview()
 
-        if (staticImageView == nil) {
+        if staticImageView == nil {
             staticImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+            staticImageView?.contentMode = .scaleAspectFit
         }
 
-        if (staticImageView?.superview == nil) {
+        if staticImageView?.superview == nil {
             toolbarHUD?.addSubview(staticImageView!)
         }
 
         staticImageView?.image = staticImage
-        staticImageView?.contentMode = .scaleAspectFit
     }
     ///添加自定义view容器
     private func setupCustomView(_ customView: UIView?) {
@@ -428,19 +511,20 @@ public class TFYProgressSwiftHUD: UIView {
         viewAnimatedIcon?.removeFromSuperview()
         staticImageView?.removeFromSuperview()
 
-        if (self.customView == nil) {
-            self.customView = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        }
-
-        if (self.customView?.superview == nil) {
-            toolbarHUD?.addSubview(self.customView!)
-        }
-
-        // 如果传入了自定义view，则替换当前的customView
+        // 如果传入了自定义view，则使用它
         if let customView = customView {
             self.customView?.removeFromSuperview()
             self.customView = customView
-            toolbarHUD?.addSubview(self.customView!)
+            toolbarHUD?.addSubview(customView)
+        } else {
+            // 否则创建默认容器
+            if self.customView == nil {
+                self.customView = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+            }
+            
+            if self.customView?.superview == nil {
+                toolbarHUD?.addSubview(self.customView!)
+            }
         }
     }
     
@@ -453,55 +537,61 @@ public class TFYProgressSwiftHUD: UIView {
         self.customView?.removeFromSuperview()
 
         // 如果传入了自定义view，则直接添加到背景view上
-        if let customView = customView {
-            self.customView = customView
-            viewBackground?.addSubview(self.customView!)
-            
-            // 设置全屏布局
-            self.customView?.translatesAutoresizingMaskIntoConstraints = false
-            if let backgroundView = viewBackground, let customView = self.customView {
-                NSLayoutConstraint.activate([
-                    customView.topAnchor.constraint(equalTo: backgroundView.topAnchor),
-                    customView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor),
-                    customView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor),
-                    customView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor)
-                ])
-            }
-        }
+        guard let customView = customView, let backgroundView = viewBackground else { return }
+        
+        self.customView = customView
+        backgroundView.addSubview(customView)
+        
+        // 设置全屏布局
+        customView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            customView.topAnchor.constraint(equalTo: backgroundView.topAnchor),
+            customView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor),
+            customView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor),
+            customView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor)
+        ])
     }
     ///计算文本大小
     private func setupSize() {
-        var width: CGFloat = 120
-        var height: CGFloat = 120
+        var width = LayoutConstants.minHUDWidth
+        var height = LayoutConstants.minHUDHeight
 
         if let text = labelStatus?.text {
-            let sizeMax = CGSize(width: 250, height: 250)
-            let attributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: labelStatus?.font as Any]
-            var rectLabel = text.boundingRect(with: sizeMax, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            let maxSize = CGSize(
+                width: LayoutConstants.maxLabelWidth,
+                height: LayoutConstants.maxLabelHeight
+            )
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: labelStatus?.font as Any
+            ]
+            var rectLabel = text.boundingRect(
+                with: maxSize,
+                options: .usesLineFragmentOrigin,
+                attributes: attributes,
+                context: nil
+            )
 
-            width = ceil(rectLabel.size.width) + 60
-            height = ceil(rectLabel.size.height) + 120
+            width = ceil(rectLabel.size.width) + LayoutConstants.horizontalPadding
+            height = ceil(rectLabel.size.height) + LayoutConstants.verticalPadding
 
-            if (width < 120) { width = 120 }
+            width = max(width, LayoutConstants.minHUDWidth)
 
             rectLabel.origin.x = (width - rectLabel.size.width) / 2
-            rectLabel.origin.y = (height - rectLabel.size.height) / 2 + 45
+            rectLabel.origin.y = (height - rectLabel.size.height) / 2 + LayoutConstants.labelOffsetY
 
             labelStatus?.frame = rectLabel
         }
 
         // iPad适配：增加最小尺寸
         if UIDevice.current.userInterfaceIdiom == .pad {
-            width = max(width, 200)
-            height = max(height, 200)
+            width = max(width, LayoutConstants.iPadMinWidth)
+            height = max(height, LayoutConstants.iPadMinHeight)
         }
 
         toolbarHUD?.bounds = CGRect(x: 0, y: 0, width: width, height: height)
 
-        let centerX = width/2
-        var centerY = height/2
-
-        if (labelStatus?.text != nil) { centerY = 55 }
+        let centerX = width / 2
+        let centerY = labelStatus?.text != nil ? LayoutConstants.iconCenterY : height / 2
 
         viewProgress?.center = CGPoint(x: centerX, y: centerY)
         viewAnimation?.center = CGPoint(x: centerX, y: centerY)

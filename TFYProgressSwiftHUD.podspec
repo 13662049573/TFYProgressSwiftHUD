@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
   spec.name         = "TFYProgressSwiftHUD"
 
-  spec.version      = "2.1.5"
+  spec.version      = "2.1.6"
 
   spec.summary      = "Swift版的多动画提示框，最低支持iOS 15 系统以上。SWIFT 5.0 以上"
 

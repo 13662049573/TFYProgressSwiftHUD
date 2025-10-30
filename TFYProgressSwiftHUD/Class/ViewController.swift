@@ -727,12 +727,11 @@ extension ViewController:UITableViewDelegate {
         if (indexPath.section == 10) {
             if (indexPath.row == 0) { 
                 // 默认成功图片
-                TFYProgressSwiftHUD.imageSuccess = UIImage(named: "reward_alert_coins") ?? UIImage()
                 TFYProgressSwiftHUD.colorHUD = UIColor.black
                 TFYProgressSwiftHUD.colorStatus = UIColor.yellow
                 TFYProgressSwiftHUD.colorAnimation = UIColor.yellow
                 TFYProgressSwiftHUD.colorProgress = UIColor.yellow
-                TFYProgressSwiftHUD.showSuccess("+5 Bonus")
+                TFYProgressSwiftHUD.showSuccess("+5 Bonus",image: UIImage(named: "reward_alert_coins"))
             }
             if (indexPath.row == 1) { 
                 // 自定义成功图片
