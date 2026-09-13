@@ -2,12 +2,12 @@
 Pod::Spec.new do |spec|
   spec.name         = "TFYProgressSwiftHUD"
 
-  spec.version      = "2.1.6"
+  spec.version      = "2.2.0"
 
-  spec.summary      = "Swift版的多动画提示框，最低支持iOS 15 系统以上。SWIFT 5.0 以上"
+  spec.summary      = "支持动画、进度、自定义视图与无障碍功能的 Swift HUD。"
 
   spec.description  = <<-DESC
-TFYProgressSwiftHUD 是一款基于 Swift 5.0 开发的多动画提示框组件，专为 iOS 15 及以上系统设计。支持多种动画样式，界面简洁美观，易于集成和自定义。适用于加载、进度、提示等多种场景，提升用户体验。代码结构清晰，维护方便，适合个人和企业项目使用。
+TFYProgressSwiftHUD 是一款基于 Swift 5.7 开发的多动画提示框组件，专为 iOS 15 及以上系统设计。支持多种动画样式、确定进度、自定义视图、深色模式和辅助功能，易于集成和定制。
                    DESC
 
   spec.homepage     = "https://github.com/13662049573/TFYProgressSwiftHUD"
@@ -18,9 +18,9 @@ TFYProgressSwiftHUD 是一款基于 Swift 5.0 开发的多动画提示框组件�
   
   spec.platform     = :ios, "15.0"
 
-  spec.swift_version = '5.0'
+  spec.swift_version = '5.7'
 
-  spec.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.0' }
+  spec.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.7' }
 
   spec.source       = { :git => "https://github.com/13662049573/TFYProgressSwiftHUD.git", :tag => spec.version }
 

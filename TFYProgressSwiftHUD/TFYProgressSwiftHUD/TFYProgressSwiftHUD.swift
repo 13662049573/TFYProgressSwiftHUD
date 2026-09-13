@@ -1,14 +1,7 @@
-//
-//  TFYProgressSwiftHUD.swift
-//  TFYProgressSwiftHUD
-//
-//  Created by 田风有 on 2021/4/10.
-//
-
 import UIKit
-import Foundation
 
-public enum AnimationType {
+/// Built-in loading animations.
+public enum AnimationType: CaseIterable, Equatable {
     case systemActivityIndicator
     case horizontalCirclesPulse
     case lineScaling
@@ -22,889 +15,910 @@ public enum AnimationType {
     case circleStrokeSpin
 }
 
-public enum AnimatedIcon {
+/// Animated result icons.
+public enum AnimatedIcon: CaseIterable, Equatable {
     case succeed
     case failed
     case added
 }
 
-public enum AlertIcon {
-    case heart
-    case doc
-    case bookmark
-    case moon
-    case star
-    case exclamation
-    case flag
-    case message
-    case question
-    case bolt
-    case shuffle
-    case eject
-    case card
-    case rotate
-    case like
-    case dislike
-    case privacy
-    case cart
-    case search
-}
+/// SF Symbols that can be presented directly by the HUD.
+public enum AlertIcon: CaseIterable, Equatable {
+    case heart, doc, bookmark, moon, star, exclamation, flag, message, question
+    case bolt, shuffle, eject, card, rotate, like, dislike, privacy, cart, search
 
-@available(iOS 15.0, *)
-extension AlertIcon {
-    var image: UIImage? {
+    public var image: UIImage? { UIImage(systemName: systemName) }
+
+    private var systemName: String {
         switch self {
-            case .heart:        return UIImage(systemName: "heart.fill")
-            case .doc:            return UIImage(systemName: "doc.fill")
-            case .bookmark:        return UIImage(systemName: "bookmark.fill")
-            case .moon:            return UIImage(systemName: "moon.fill")
-            case .star:            return UIImage(systemName: "star.fill")
-            case .exclamation:    return UIImage(systemName: "exclamationmark.triangle.fill")
-            case .flag:            return UIImage(systemName: "flag.fill")
-            case .message:        return UIImage(systemName: "envelope.fill")
-            case .question:        return UIImage(systemName: "questionmark.diamond.fill")
-            case .bolt:            return UIImage(systemName: "bolt.fill")
-            case .shuffle:        return UIImage(systemName: "shuffle")
-            case .eject:        return UIImage(systemName: "eject.fill")
-            case .card:            return UIImage(systemName: "creditcard.fill")
-            case .rotate:        return UIImage(systemName: "rotate.right.fill")
-            case .like:            return UIImage(systemName: "hand.thumbsup.fill")
-            case .dislike:        return UIImage(systemName: "hand.thumbsdown.fill")
-            case .privacy:        return UIImage(systemName: "hand.raised.fill")
-            case .cart:            return UIImage(systemName: "cart.fill")
-            case .search:        return UIImage(systemName: "magnifyingglass")
+        case .heart: return "heart.fill"
+        case .doc: return "doc.fill"
+        case .bookmark: return "bookmark.fill"
+        case .moon: return "moon.fill"
+        case .star: return "star.fill"
+        case .exclamation: return "exclamationmark.triangle.fill"
+        case .flag: return "flag.fill"
+        case .message: return "envelope.fill"
+        case .question: return "questionmark.diamond.fill"
+        case .bolt: return "bolt.fill"
+        case .shuffle: return "shuffle"
+        case .eject: return "eject.fill"
+        case .card: return "creditcard.fill"
+        case .rotate: return "rotate.right.fill"
+        case .like: return "hand.thumbsup.fill"
+        case .dislike: return "hand.thumbsdown.fill"
+        case .privacy: return "hand.raised.fill"
+        case .cart: return "cart.fill"
+        case .search: return "magnifyingglass"
         }
     }
 }
 
-@available(iOS 15.0, *)
-public class TFYProgressSwiftHUD: UIView {
-    // MARK: - 常量定义
-    private enum LayoutConstants {
-        static let minHUDWidth: CGFloat = 120
-        static let minHUDHeight: CGFloat = 120
-        static let maxLabelWidth: CGFloat = 250
-        static let maxLabelHeight: CGFloat = 250
-        static let horizontalPadding: CGFloat = 60
-        static let verticalPadding: CGFloat = 120
-        static let labelOffsetY: CGFloat = 45
-        static let iconCenterY: CGFloat = 55
-        static let cornerRadius: CGFloat = 10
-        static let animationDuration: TimeInterval = 0.15
-        static let hudScaleTransform: CGFloat = 1.4
-        static let hideScaleTransform: CGFloat = 0.3
-        static let delayPerCharacter: Double = 0.03
-        static let baseDelay: Double = 1.25
-        
-        // iPad 适配
-        static let iPadMinWidth: CGFloat = 200
-        static let iPadMinHeight: CGFloat = 200
+/// Scene-aware HUD for loading, progress, result and custom content.
+///
+/// The legacy `interaction` argument is retained for source compatibility. `true`
+/// lets touches pass through the overlay; `false` blocks touches behind the HUD.
+public final class TFYProgressSwiftHUD: UIView {
+    private enum Layout {
+        static let minimumPanelSize = CGSize(width: 120, height: 120)
+        static let maximumPanelWidth: CGFloat = 320
+        static let screenMargin: CGFloat = 24
+        static let contentInset: CGFloat = 20
+        static let itemSpacing: CGFloat = 14
+        static let cornerRadius: CGFloat = 14
+        static let iconSize = CGSize(width: 64, height: 64)
+        static let progressSize = CGSize(width: 70, height: 70)
+        static let animationDuration: TimeInterval = 0.2
     }
-    
-    // MARK: - 视图容器
-    private var viewBackground: UIView?
-    private var toolbarHUD: UIToolbar?
-    private var labelStatus: UILabel?
-    
-    private var viewProgress: ProgressView?  /// 进度视图容器
-    private var viewAnimation: UIView?       /// 动画容器
-    private var viewAnimatedIcon: UIView?    /// 动画图标容器
-    private var staticImageView: UIImageView? /// 静态图片容器
-    private var customView: UIView?          /// 自定义view容器
 
-    private var timer: Timer?  /// 定时器
-    
-    // MARK: - 配置属性
-    private var animationType = AnimationType.systemActivityIndicator
-    ///颜色默认设置
-    private var colorBackground = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)
-    private var colorHUD = UIColor.black
-    private var colorStatus = UIColor.white
-    private var colorAnimation = UIColor.white
-    private var colorProgress = UIColor.white
-    
-    ///更新颜色以支持深色模式
-    private func updateColorsForAppearance() {
-        colorBackground = UIColor.systemBackground.withAlphaComponent(0.2)
-        colorHUD = UIColor.systemGray6
-        colorStatus = UIColor.label
-        colorAnimation = UIColor.label
-        colorProgress = UIColor.label
+    private enum ContentKind {
+        case loading, progress, animatedIcon, image, custom, fullScreen
     }
-    ///默认图片设置
-    private var fontStatus = UIFont.boldSystemFont(ofSize: 24)
-    private var imageSuccess: UIImage = {
-        if #available(iOS 13.0, *) {
-            return UIImage(systemName: "checkmark")?.withTintColor(UIColor.systemGreen, renderingMode: .alwaysOriginal) ?? UIImage()
-        } else {
-            // 为iOS 15+提供默认的checkmark图片
-            return UIImage()
-        }
-    }()
-    private var imageError: UIImage = {
-        if #available(iOS 13.0, *) {
-            return UIImage(systemName: "xmark")?.withTintColor(UIColor.systemRed, renderingMode: .alwaysOriginal) ?? UIImage()
-        } else {
-            // 为iOS 15+提供默认的xmark图片
-            return UIImage()
-        }
-    }()
-    ///监听键盘事件
-    private let keyboardWillShow    = UIResponder.keyboardWillShowNotification
-    private let keyboardWillHide    = UIResponder.keyboardWillHideNotification
-    private let keyboardDidShow     = UIResponder.keyboardDidShowNotification
-    private let keyboardDidHide     = UIResponder.keyboardDidHideNotification
-    ///检测模拟器在各个方向上的切换
-    private var orientationDidChange = UIDevice.orientationDidChangeNotification
-    ///单例模式
-    static let shared:TFYProgressSwiftHUD = {
-        let instance = TFYProgressSwiftHUD()
-        return instance
-    }()
-    
-    convenience private init() {
-        self.init(frame:UIScreen.main.bounds)
-        self.alpha = 0
-    }
-    
-    required internal init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    override private init(frame: CGRect) {
-        super.init(frame: frame)
-        updateColorsForAppearance()
-        setupAppearanceObserver()
-    }
-    
-    private func setupAppearanceObserver() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appearanceDidChange),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-    }
-    
-    @objc private func appearanceDidChange() {
-        updateColorsForAppearance()
-    }
-    
-    private func setup(status:String? = nil , progress:CGFloat? = nil, animatedIcon:AnimatedIcon? = nil,staticImage:UIImage? = nil,customView:UIView? = nil,fullScreenCustomView:UIView? = nil,hide:Bool,interaction:Bool) {
-        
-        // 确保在主线程执行
-        if !Thread.isMainThread {
-            DispatchQueue.main.async {
-                self.setup(status: status, progress: progress, animatedIcon: animatedIcon, staticImage: staticImage, customView: customView, fullScreenCustomView: fullScreenCustomView, hide: hide, interaction: interaction)
+
+    private enum Content {
+        case loading
+        case progress(CGFloat)
+        case animatedIcon(AnimatedIcon)
+        case image(UIImage?)
+        case custom(UIView)
+        case fullScreen(UIView)
+
+        var kind: ContentKind {
+            switch self {
+            case .loading: return .loading
+            case .progress: return .progress
+            case .animatedIcon: return .animatedIcon
+            case .image: return .image
+            case .custom: return .custom
+            case .fullScreen: return .fullScreen
             }
+        }
+    }
+
+    private static let shared = TFYProgressSwiftHUD(frame: .zero)
+
+    private var overlayView: HUDOverlayView?
+    private var panelView: UIView?
+    private var statusLabel: UILabel?
+    private var contentView: UIView?
+    private var progressView: HUDProgressView?
+    private var activeKind: ContentKind?
+    private var activeAnimatedIcon: AnimatedIcon?
+    private var observerTokens: [NSObjectProtocol] = []
+    private var dismissWorkItem: DispatchWorkItem?
+    private var keyboardOverlap: CGFloat = 0
+    private var presentationID = 0
+
+    private var selectedAnimationType: AnimationType = .systemActivityIndicator
+    private var selectedBackgroundColor = TFYProgressSwiftHUD.defaultBackgroundColor
+    private var selectedHUDColor = TFYProgressSwiftHUD.defaultHUDColor
+    private var selectedStatusColor = TFYProgressSwiftHUD.defaultStatusColor
+    private var selectedAnimationColor = TFYProgressSwiftHUD.defaultStatusColor
+    private var selectedProgressColor = TFYProgressSwiftHUD.defaultStatusColor
+    private var selectedStatusFont = UIFont.preferredFont(forTextStyle: .headline)
+    private var selectedSuccessImage = TFYProgressSwiftHUD.defaultSuccessImage
+    private var selectedErrorImage = TFYProgressSwiftHUD.defaultErrorImage
+    private var minimumDismissDelay: TimeInterval = 1.25
+    private var maximumDismissDelay: TimeInterval = 5
+
+    private static var defaultBackgroundColor: UIColor { UIColor.black.withAlphaComponent(0.22) }
+    private static var defaultHUDColor: UIColor {
+        UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor.secondarySystemBackground
+                : UIColor.label.withAlphaComponent(0.88)
+        }
+    }
+    private static var defaultStatusColor: UIColor {
+        UIColor { $0.userInterfaceStyle == .dark ? .label : .systemBackground }
+    }
+    private static var defaultSuccessImage: UIImage {
+        UIImage(systemName: "checkmark.circle.fill")?
+            .withTintColor(.systemGreen, renderingMode: .alwaysOriginal) ?? UIImage()
+    }
+    private static var defaultErrorImage: UIImage {
+        UIImage(systemName: "xmark.octagon.fill")?
+            .withTintColor(.systemRed, renderingMode: .alwaysOriginal) ?? UIImage()
+    }
+
+    private override init(frame: CGRect) {
+        super.init(frame: frame)
+        isHidden = true
+    }
+
+    @available(*, unavailable, message: "Use the TFYProgressSwiftHUD class API.")
+    required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
+
+    deinit { removeObservers() }
+
+    private static func onMain(_ work: @escaping () -> Void) {
+        Thread.isMainThread ? work() : DispatchQueue.main.async(execute: work)
+    }
+
+    private static func valueOnMain<Value>(_ work: () -> Value) -> Value {
+        Thread.isMainThread ? work() : DispatchQueue.main.sync(execute: work)
+    }
+
+    private func present(
+        status: String?,
+        content: Content,
+        automaticallyDismiss: Bool,
+        interaction: Bool,
+        in hostView: UIView? = nil
+    ) {
+        dispatchPrecondition(condition: .onQueue(.main))
+        let trimmed = status?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let displayedStatus = trimmed?.isEmpty == false ? trimmed : nil
+
+        if content.kind == .progress,
+           activeKind == .progress,
+           let overlayView,
+           hostView == nil || overlayView.superview === hostView,
+           case let .progress(value) = content {
+            overlayView.isUserInteractionEnabled = !interaction
+            overlayView.accessibilityViewIsModal = !interaction
+            updateProgress(value, status: displayedStatus)
+            scheduleDismiss(ifNeeded: automaticallyDismiss, status: displayedStatus)
             return
         }
-        
-        setupNotifications()
-        setupBackground(interaction)
-        setupToolbar()
-        setupLabel(status)
-    
-        if (progress == nil) && (animatedIcon == nil) && (staticImage == nil) && (customView == nil) && (fullScreenCustomView == nil) { setupAnimation()                }
-        if (progress != nil) && (animatedIcon == nil) && (staticImage == nil) && (customView == nil) && (fullScreenCustomView == nil) { setupProgress(progress)            }
-        if (progress == nil) && (animatedIcon != nil) && (staticImage == nil) && (customView == nil) && (fullScreenCustomView == nil) { setupAnimatedIcon(animatedIcon)    }
-        if (progress == nil) && (animatedIcon == nil) && (staticImage != nil) && (customView == nil) && (fullScreenCustomView == nil) { setupStaticImage(staticImage)    }
-        if (progress == nil) && (animatedIcon == nil) && (staticImage == nil) && (customView != nil) && (fullScreenCustomView == nil) { setupCustomView(customView)    }
-        if (progress == nil) && (animatedIcon == nil) && (staticImage == nil) && (customView == nil) && (fullScreenCustomView != nil) { setupFullScreenCustomView(fullScreenCustomView)    }
 
-        setupSize()
-        setupPosition()
-        
-        hudShow()
+        guard let host = hostView ?? Self.activeWindow() else { return }
+        dismissWorkItem?.cancel()
+        presentationID += 1
+        let wasVisible = overlayView?.superview != nil
 
-        if hide {
-            let text = labelStatus?.text ?? ""
-            let delay = Double(text.count) * LayoutConstants.delayPerCharacter + LayoutConstants.baseDelay
-            timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
-                self.hudHide()
-            }
-        }
-    }
-    ///弹出视图
-    private func hudShow() {
-        timer?.invalidate()
-        timer = nil
-        
-        guard self.alpha != 1 else { return }
-        
-        self.alpha = 1
-        toolbarHUD?.alpha = 0
-        toolbarHUD?.transform = CGAffineTransform(
-            scaleX: LayoutConstants.hudScaleTransform,
-            y: LayoutConstants.hudScaleTransform
-        )
+        prepareOverlay(in: host, allowsInteraction: interaction)
+        clearContent()
+        activeKind = content.kind
 
-        UIView.animate(
-            withDuration: LayoutConstants.animationDuration,
-            delay: 0,
-            options: [.allowUserInteraction, .curveEaseIn],
-            animations: {
-                self.toolbarHUD?.transform = CGAffineTransform(
-                    scaleX: 1 / LayoutConstants.hudScaleTransform,
-                    y: 1 / LayoutConstants.hudScaleTransform
-                )
-                self.toolbarHUD?.alpha = 1
-            },
-            completion: nil
+        switch content {
+        case .fullScreen(let customView): configureFullScreen(customView)
+        default: configurePanel(status: displayedStatus, content: content)
+        }
+
+        updateAppearance()
+        updatePosition(animated: false)
+        animateIn(ifNeeded: !wasVisible)
+        scheduleDismiss(ifNeeded: automaticallyDismiss, status: displayedStatus)
+        announce(status: displayedStatus, kind: content.kind)
+    }
+
+    private func prepareOverlay(in host: UIView, allowsInteraction: Bool) {
+        if overlayView?.superview !== host {
+            destroyPresentation()
+            let overlay = HUDOverlayView(frame: host.bounds)
+            overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            overlay.accessibilityIdentifier = "tfy.hud.overlay"
+            overlay.onLayout = { [weak self] in self?.updatePosition(animated: false) }
+            overlay.onTraitChange = { [weak self] in self?.updateAppearance() }
+            host.addSubview(overlay)
+            overlayView = overlay
+            installObservers()
+        }
+        overlayView?.backgroundColor = allowsInteraction ? .clear : selectedBackgroundColor
+        overlayView?.isUserInteractionEnabled = !allowsInteraction
+        overlayView?.accessibilityViewIsModal = !allowsInteraction
+    }
+
+    private func configurePanel(status: String?, content: Content) {
+        guard let overlayView else { return }
+        let panel = UIView()
+        panel.layer.cornerCurve = .continuous
+        panel.layer.cornerRadius = Layout.cornerRadius
+        panel.layer.shadowColor = UIColor.black.cgColor
+        panel.layer.shadowOpacity = 0.16
+        panel.layer.shadowRadius = 16
+        panel.layer.shadowOffset = CGSize(width: 0, height: 8)
+        panel.accessibilityIdentifier = "tfy.hud.panel"
+        overlayView.addSubview(panel)
+        panelView = panel
+
+        let visualContent = makeContentView(for: content)
+        panel.addSubview(visualContent)
+        contentView = visualContent
+
+        if let status {
+            let label = makeStatusLabel()
+            label.text = status
+            label.accessibilityLabel = status
+            panel.addSubview(label)
+            statusLabel = label
+        }
+        layoutPanel()
+    }
+
+    private func makeStatusLabel() -> UILabel {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.adjustsFontForContentSizeCategory = true
+        label.isAccessibilityElement = true
+        label.accessibilityTraits = .staticText
+        label.accessibilityIdentifier = "tfy.hud.status"
+        return label
+    }
+
+    private func makeContentView(for content: Content) -> UIView {
+        switch content {
+        case .loading:
+            let container = UIView(frame: CGRect(origin: .zero, size: Layout.iconSize))
+            addLoadingAnimation(to: container)
+            container.isAccessibilityElement = true
+            container.accessibilityLabel = NSLocalizedString("Loading", comment: "HUD accessibility label")
+            container.accessibilityTraits = .updatesFrequently
+            return container
+        case .progress(let value):
+            let progress = HUDProgressView(color: selectedProgressColor)
+            progress.frame = CGRect(origin: .zero, size: Layout.progressSize)
+            progress.setProgress(value, animated: false)
+            progressView = progress
+            return progress
+        case .animatedIcon(let icon):
+            if UIAccessibility.isReduceMotionEnabled { return makeReducedMotionIcon(icon) }
+            let container = UIView(frame: CGRect(origin: .zero, size: Layout.progressSize))
+            addAnimatedIcon(icon, to: container)
+            activeAnimatedIcon = icon
+            container.isAccessibilityElement = true
+            container.accessibilityLabel = accessibilityLabel(for: icon)
+            return container
+        case .image(let image):
+            let imageView = UIImageView(frame: CGRect(origin: .zero, size: Layout.iconSize))
+            imageView.contentMode = .scaleAspectFit
+            imageView.image = image
+            imageView.tintColor = selectedAnimationColor
+            imageView.isAccessibilityElement = true
+            imageView.accessibilityLabel = NSLocalizedString("Status", comment: "HUD accessibility label")
+            return imageView
+        case .custom(let customView):
+            normalizeCustomViewSize(customView)
+            return customView
+        case .fullScreen:
+            return UIView()
+        }
+    }
+
+    private func configureFullScreen(_ customView: UIView) {
+        guard let overlayView else { return }
+        customView.removeFromSuperview()
+        customView.translatesAutoresizingMaskIntoConstraints = false
+        overlayView.addSubview(customView)
+        NSLayoutConstraint.activate([
+            customView.topAnchor.constraint(equalTo: overlayView.topAnchor),
+            customView.leadingAnchor.constraint(equalTo: overlayView.leadingAnchor),
+            customView.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
+            customView.bottomAnchor.constraint(equalTo: overlayView.bottomAnchor)
+        ])
+        contentView = customView
+        customView.accessibilityViewIsModal = true
+    }
+
+    private func normalizeCustomViewSize(_ customView: UIView) {
+        var size = customView.bounds.size
+        if size.width <= 0 || size.height <= 0 {
+            size = customView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        }
+        if size.width <= 0 || size.height <= 0 { size = Layout.iconSize }
+        size.width = min(max(size.width, 1), 220)
+        size.height = min(max(size.height, 1), 220)
+        customView.frame = CGRect(origin: .zero, size: size)
+    }
+
+    private func layoutPanel() {
+        guard let overlayView, let panelView, let contentView else { return }
+        let maximumWidth = max(
+            Layout.minimumPanelSize.width,
+            min(Layout.maximumPanelWidth, overlayView.bounds.width - Layout.screenMargin * 2)
+        )
+        let labelMaximumWidth = maximumWidth - Layout.contentInset * 2
+        let labelSize = statusLabel?.sizeThatFits(
+            CGSize(width: labelMaximumWidth, height: .greatestFiniteMagnitude)
+        ) ?? .zero
+        let contentSize = contentView.bounds.size
+        let bodyHeight = contentSize.height + (statusLabel == nil ? 0 : Layout.itemSpacing + labelSize.height)
+        let width = min(
+            maximumWidth,
+            max(Layout.minimumPanelSize.width, max(contentSize.width, labelSize.width) + Layout.contentInset * 2)
+        )
+        let height = max(Layout.minimumPanelSize.height, bodyHeight + Layout.contentInset * 2)
+        panelView.bounds = CGRect(x: 0, y: 0, width: width, height: height)
+        let startY = (height - bodyHeight) / 2
+        contentView.center = CGPoint(x: width / 2, y: startY + contentSize.height / 2)
+        statusLabel?.frame = CGRect(
+            x: Layout.contentInset,
+            y: startY + contentSize.height + Layout.itemSpacing,
+            width: width - Layout.contentInset * 2,
+            height: labelSize.height
         )
     }
-    ///隐藏视图
-    private func hudHide() {
-        guard self.alpha == 1 else { return }
-        
-        UIView.animate(
-            withDuration: LayoutConstants.animationDuration,
-            delay: 0,
-            options: [.allowUserInteraction, .curveEaseIn],
-            animations: {
-                self.toolbarHUD?.transform = CGAffineTransform(
-                    scaleX: LayoutConstants.hideScaleTransform,
-                    y: LayoutConstants.hideScaleTransform
-                )
-                self.toolbarHUD?.alpha = 0
-            },
-            completion: { _ in
-                self.hudDestroy()
-                self.alpha = 0
-            }
-        )
-    }
-    ///清除所有资源
-    private func hudDestroy() {
-        // 移除通知观察者
-        NotificationCenter.default.removeObserver(self)
-        
-        // 清理定时器
-        timer?.invalidate()
-        timer = nil
-        
-        // 清理动画层（在移除视图之前）
-        viewAnimation?.layer.sublayers?.forEach { layer in
-            layer.removeAllAnimations()
-            layer.removeFromSuperlayer()
+
+    private func addLoadingAnimation(to view: UIView) {
+        if UIAccessibility.isReduceMotionEnabled {
+            animationSystemActivityIndicator(view, color: selectedAnimationColor)
+            return
         }
-        viewAnimatedIcon?.layer.sublayers?.forEach { layer in
-            layer.removeAllAnimations()
-            layer.removeFromSuperlayer()
-        }
-        
-        // 移除视图并释放引用
-        staticImageView?.removeFromSuperview()
-        staticImageView = nil
-        
-        viewAnimatedIcon?.removeFromSuperview()
-        viewAnimatedIcon = nil
-        
-        viewAnimation?.removeFromSuperview()
-        viewAnimation = nil
-        
-        viewProgress?.removeFromSuperview()
-        viewProgress = nil
-        
-        customView?.removeFromSuperview()
-        customView = nil
-        
-        labelStatus?.removeFromSuperview()
-        labelStatus = nil
-        
-        toolbarHUD?.removeFromSuperview()
-        toolbarHUD = nil
-        
-        viewBackground?.removeFromSuperview()
-        viewBackground = nil
-    }
-    ///添加监听
-    private func setupNotifications() {
-        if viewBackground == nil {
-            NotificationCenter.default.addObserver(self, selector: #selector(setupPosition(_:)), name: keyboardWillShow, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(setupPosition(_:)), name: keyboardWillHide, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(setupPosition(_:)), name: keyboardDidShow, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(setupPosition(_:)), name: keyboardDidHide, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(setupPosition(_:)), name: orientationDidChange, object: nil)
+        switch selectedAnimationType {
+        case .systemActivityIndicator: animationSystemActivityIndicator(view, color: selectedAnimationColor)
+        case .horizontalCirclesPulse: animationHorizontalCirclesPulse(view, color: selectedAnimationColor)
+        case .lineScaling: animationLineScaling(view, color: selectedAnimationColor)
+        case .singleCirclePulse: animationSingleCirclePulse(view, color: selectedAnimationColor)
+        case .multipleCirclePulse: animationMultipleCirclePulse(view, color: selectedAnimationColor)
+        case .singleCircleScaleRipple: animationSingleCircleScaleRipple(view, color: selectedAnimationColor)
+        case .multipleCircleScaleRipple: animationMultipleCircleScaleRipple(view, color: selectedAnimationColor)
+        case .circleSpinFade: animationCircleSpinFade(view, color: selectedAnimationColor)
+        case .lineSpinFade: animationLineSpinFade(view, color: selectedAnimationColor)
+        case .circleRotateChase: animationCircleRotateChase(view, color: selectedAnimationColor)
+        case .circleStrokeSpin: animationCircleStrokeSpin(view, color: selectedAnimationColor)
         }
     }
-    ///添加底层容器在window 上
-    private func setupBackground(_ interaction:Bool) {
-        if viewBackground == nil {
-            viewBackground = UIView(frame: self.bounds)
-            if let window = KeyWindows() {
-                window.addSubview(viewBackground!)
+
+    private func addAnimatedIcon(_ icon: AnimatedIcon, to view: UIView) {
+        switch icon {
+        case .succeed: animatedIconSucceed(view, color: selectedAnimationColor, alpha: 0)
+        case .failed: animatedIconFailed(view, color: selectedAnimationColor, alpha: 0)
+        case .added: animatedIconAdded(view, color: selectedAnimationColor, alpha: 0)
+        }
+    }
+
+    private func makeReducedMotionIcon(_ icon: AnimatedIcon) -> UIView {
+        let imageName: String
+        let color: UIColor
+        switch icon {
+        case .succeed: (imageName, color) = ("checkmark.circle.fill", .systemGreen)
+        case .failed: (imageName, color) = ("xmark.octagon.fill", .systemRed)
+        case .added: (imageName, color) = ("plus.circle.fill", .systemBlue)
+        }
+        let imageView = UIImageView(frame: CGRect(origin: .zero, size: Layout.progressSize))
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemName: imageName)
+        imageView.tintColor = color
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityLabel = accessibilityLabel(for: icon)
+        return imageView
+    }
+
+    private func accessibilityLabel(for icon: AnimatedIcon) -> String {
+        switch icon {
+        case .succeed: return NSLocalizedString("Success", comment: "HUD accessibility label")
+        case .failed: return NSLocalizedString("Failed", comment: "HUD accessibility label")
+        case .added: return NSLocalizedString("Added", comment: "HUD accessibility label")
+        }
+    }
+
+    private func updateProgress(_ value: CGFloat, status: String?) {
+        if statusLabel?.text != status {
+            if let status {
+                if statusLabel == nil, let panelView {
+                    let label = makeStatusLabel()
+                    panelView.addSubview(label)
+                    statusLabel = label
+                }
+                statusLabel?.text = status
+                statusLabel?.accessibilityLabel = status
             } else {
-                // 如果无法获取主窗口，尝试使用当前视图控制器的视图
-                if let topViewController = getTopViewController() {
-                    topViewController.view.addSubview(viewBackground!)
+                statusLabel?.removeFromSuperview()
+                statusLabel = nil
+            }
+        }
+        progressView?.setProgress(value, animated: true)
+        updateAppearance()
+        updatePosition(animated: true)
+    }
+
+    private func updateAppearance() {
+        overlayView?.backgroundColor = overlayView?.isUserInteractionEnabled == true
+            ? selectedBackgroundColor : .clear
+        panelView?.backgroundColor = selectedHUDColor
+        statusLabel?.font = selectedStatusFont
+        statusLabel?.textColor = selectedStatusColor
+        progressView?.color = selectedProgressColor
+
+        guard let contentView else { return }
+        if activeKind == .loading {
+            contentView.subviews.forEach { $0.removeFromSuperview() }
+            contentView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
+            addLoadingAnimation(to: contentView)
+        } else if activeKind == .animatedIcon, let activeAnimatedIcon {
+            recolorShapeLayers(in: contentView.layer, color: selectedAnimationColor)
+            contentView.accessibilityLabel = accessibilityLabel(for: activeAnimatedIcon)
+        } else if activeKind == .image {
+            (contentView as? UIImageView)?.tintColor = selectedAnimationColor
+        }
+        layoutPanel()
+    }
+
+    private func recolorShapeLayers(in layer: CALayer, color: UIColor) {
+        layer.sublayers?.forEach { sublayer in
+            if let shape = sublayer as? CAShapeLayer {
+                if shape.strokeColor != nil { shape.strokeColor = color.cgColor }
+                if let fill = shape.fillColor, UIColor(cgColor: fill).cgColor.alpha > 0 {
+                    shape.fillColor = color.cgColor
                 }
             }
+            recolorShapeLayers(in: sublayer, color: color)
         }
-        viewBackground?.backgroundColor = interaction ? .clear : colorBackground
-        viewBackground?.isUserInteractionEnabled = (interaction == false)
     }
-    
-    ///获取顶层视图控制器
-    private func getTopViewController() -> UIViewController? {
-        if let window = KeyWindows() {
-            var topViewController = window.rootViewController
-            while let presentedViewController = topViewController?.presentedViewController {
-                topViewController = presentedViewController
+
+    private func updatePosition(animated: Bool) {
+        guard let overlayView, let panelView, activeKind != .fullScreen else { return }
+        layoutPanel()
+        let availableHeight = max(0, overlayView.bounds.height - keyboardOverlap)
+        let safeTop = overlayView.safeAreaInsets.top
+        let safeBottom = max(safeTop, availableHeight - overlayView.safeAreaInsets.bottom)
+        let halfHeight = panelView.bounds.height / 2
+        let centerY = min(max(availableHeight / 2, safeTop + halfHeight), safeBottom - halfHeight)
+        let changes = { panelView.center = CGPoint(x: overlayView.bounds.midX, y: centerY) }
+        if animated && !UIAccessibility.isReduceMotionEnabled {
+            UIView.animate(
+                withDuration: Layout.animationDuration,
+                delay: 0,
+                options: [.allowUserInteraction, .beginFromCurrentState],
+                animations: changes
+            )
+        } else { changes() }
+    }
+
+    private func animateIn(ifNeeded: Bool) {
+        guard ifNeeded, let panelView, activeKind != .fullScreen else { return }
+        panelView.layer.removeAllAnimations()
+        panelView.alpha = 0
+        panelView.transform = UIAccessibility.isReduceMotionEnabled
+            ? .identity : CGAffineTransform(scaleX: 1.12, y: 1.12)
+        UIView.animate(
+            withDuration: Layout.animationDuration,
+            delay: 0,
+            options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseOut],
+            animations: { panelView.alpha = 1; panelView.transform = .identity }
+        )
+    }
+
+    private func scheduleDismiss(ifNeeded: Bool, status: String?) {
+        dismissWorkItem?.cancel()
+        guard ifNeeded else { return }
+        let readingTime = TimeInterval(status?.count ?? 0) * 0.04
+        let delay = min(max(minimumDismissDelay + readingTime, minimumDismissDelay), maximumDismissDelay)
+        let item = DispatchWorkItem { [weak self] in self?.hide(completion: nil) }
+        dismissWorkItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: item)
+    }
+
+    private func hide(completion: (() -> Void)?) {
+        dispatchPrecondition(condition: .onQueue(.main))
+        dismissWorkItem?.cancel()
+        dismissWorkItem = nil
+        guard let overlayView else { completion?(); return }
+
+        presentationID += 1
+        let hidingID = presentationID
+        let target = panelView ?? contentView ?? overlayView
+        UIView.animate(
+            withDuration: Layout.animationDuration,
+            delay: 0,
+            options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseIn],
+            animations: {
+                target.alpha = 0
+                if !UIAccessibility.isReduceMotionEnabled, self.activeKind != .fullScreen {
+                    target.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
+                }
+            },
+            completion: { [weak self] _ in
+                guard let self, self.presentationID == hidingID else { return }
+                self.destroyPresentation()
+                completion?()
             }
-            return topViewController
+        )
+    }
+
+    private func clearContent() {
+        panelView?.layer.removeAllAnimations()
+        contentView?.layer.removeAllAnimations()
+        contentView?.layer.sublayers?.forEach { $0.removeAllAnimations() }
+        panelView?.removeFromSuperview()
+        contentView?.removeFromSuperview()
+        panelView = nil
+        statusLabel = nil
+        contentView = nil
+        progressView = nil
+        activeAnimatedIcon = nil
+    }
+
+    private func destroyPresentation() {
+        dismissWorkItem?.cancel()
+        dismissWorkItem = nil
+        clearContent()
+        overlayView?.removeFromSuperview()
+        overlayView = nil
+        activeKind = nil
+        keyboardOverlap = 0
+        removeObservers()
+    }
+
+    private func installObservers() {
+        guard observerTokens.isEmpty else { return }
+        let center = NotificationCenter.default
+        observerTokens = [
+            center.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {
+                [weak self] in self?.handleKeyboard($0)
+            },
+            center.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) {
+                [weak self] in self?.handleKeyboard($0)
+            },
+            center.addObserver(forName: UIContentSizeCategory.didChangeNotification, object: nil, queue: .main) {
+                [weak self] _ in self?.updateAppearance(); self?.updatePosition(animated: false)
+            },
+            center.addObserver(forName: UIAccessibility.reduceMotionStatusDidChangeNotification, object: nil, queue: .main) {
+                [weak self] _ in self?.updateAppearance()
+            }
+        ]
+    }
+
+    private func removeObservers() {
+        observerTokens.forEach(NotificationCenter.default.removeObserver)
+        observerTokens.removeAll()
+    }
+
+    private func handleKeyboard(_ notification: Notification) {
+        guard let overlayView else { return }
+        let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey]
+            as? TimeInterval ?? Layout.animationDuration
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            keyboardOverlap = 0
+        } else if let screenFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let localFrame = overlayView.convert(screenFrame, from: nil)
+            keyboardOverlap = max(0, overlayView.bounds.maxY - localFrame.minY)
+        }
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: [.allowUserInteraction, .beginFromCurrentState],
+            animations: { self.updatePosition(animated: false) }
+        )
+    }
+
+    private func announce(status: String?, kind: ContentKind) {
+        guard UIAccessibility.isVoiceOverRunning else { return }
+        let fallback: String
+        switch kind {
+        case .loading: fallback = "Loading"
+        case .progress: fallback = "Progress"
+        case .animatedIcon, .image: fallback = "Status"
+        case .custom, .fullScreen: fallback = "Notification"
+        }
+        UIAccessibility.post(notification: .announcement, argument: status ?? fallback)
+    }
+
+    private func resetToDefaults() {
+        selectedAnimationType = .systemActivityIndicator
+        selectedBackgroundColor = Self.defaultBackgroundColor
+        selectedHUDColor = Self.defaultHUDColor
+        selectedStatusColor = Self.defaultStatusColor
+        selectedAnimationColor = Self.defaultStatusColor
+        selectedProgressColor = Self.defaultStatusColor
+        selectedStatusFont = UIFont.preferredFont(forTextStyle: .headline)
+        selectedSuccessImage = Self.defaultSuccessImage
+        selectedErrorImage = Self.defaultErrorImage
+        minimumDismissDelay = 1.25
+        maximumDismissDelay = 5
+        updateAppearance()
+    }
+
+    private static func activeWindow() -> UIWindow? {
+        let scenes = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .filter { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }
+            .sorted { $0.activationState == .foregroundActive && $1.activationState != .foregroundActive }
+        for scene in scenes {
+            if let key = scene.windows.first(where: { $0.isKeyWindow && !$0.isHidden }) { return key }
+            if let normal = scene.windows.first(where: {
+                !$0.isHidden && $0.alpha > 0 && $0.windowLevel == .normal
+            }) { return normal }
         }
         return nil
     }
-    ///添加加载视图容器
-    private func setupToolbar() {
-        if toolbarHUD == nil {
-            toolbarHUD = UIToolbar(frame: .zero)
-            toolbarHUD?.isTranslucent = true
-            toolbarHUD?.clipsToBounds = true
-            toolbarHUD?.layer.cornerRadius = LayoutConstants.cornerRadius
-            toolbarHUD?.layer.masksToBounds = true
-            toolbarHUD?.isOpaque = false
-            toolbarHUD?.clearsContextBeforeDrawing = true
-            viewBackground?.addSubview(toolbarHUD!)
-        }
-        toolbarHUD?.backgroundColor = colorHUD
-        toolbarHUD?.barTintColor = colorHUD
-        toolbarHUD?.tintColor = colorHUD
-    }
-    ///添加文本容器
-    private func setupLabel(_ status:String?) {
-        if labelStatus == nil {
-            labelStatus = UILabel()
-            labelStatus?.textAlignment = .center
-            labelStatus?.baselineAdjustment = .alignCenters
-            labelStatus?.numberOfLines = 0
-            toolbarHUD?.addSubview(labelStatus!)
-        }
-        labelStatus?.text = (status != "") ? status : nil
-        labelStatus?.font = fontStatus
-        labelStatus?.textColor = colorStatus
-        labelStatus?.isHidden = (status == nil) ? true : false
-        labelStatus?.adjustsFontForContentSizeCategory = true
-        labelStatus?.isAccessibilityElement = true
-        labelStatus?.accessibilityLabel = status
-        labelStatus?.accessibilityTraits = .staticText
-    }
-    ///添加进度条容器
-    private func setupProgress(_ progress: CGFloat?) {
-
-        viewAnimation?.removeFromSuperview()
-        viewAnimatedIcon?.removeFromSuperview()
-        staticImageView?.removeFromSuperview()
-        customView?.removeFromSuperview()
-
-        if (viewProgress == nil) {
-            viewProgress = ProgressView(colorProgress)
-            viewProgress?.frame = CGRect(x: 0, y: 0, width: 70, height: 70)
-        }
-
-        if (viewProgress?.superview == nil) {
-            toolbarHUD?.addSubview(viewProgress!)
-        }
-
-        viewProgress?.setProgress(progress!)
-    }
-    ///动画添加
-    private func setupAnimation() {
-        viewProgress?.removeFromSuperview()
-        viewAnimatedIcon?.removeFromSuperview()
-        staticImageView?.removeFromSuperview()
-        customView?.removeFromSuperview()
-        
-        if viewAnimation == nil {
-            viewAnimation = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        }
-        
-        if viewAnimation?.superview == nil {
-            toolbarHUD?.addSubview(viewAnimation!)
-        }
-        
-        // 清理旧的动画
-        viewAnimation?.subviews.forEach { $0.removeFromSuperview() }
-        viewAnimation?.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
-        
-        // 根据动画类型创建对应动画
-        guard let animation = viewAnimation else { return }
-        
-        switch animationType {
-        case .systemActivityIndicator:
-            animationSystemActivityIndicator(animation, color: colorAnimation)
-        case .horizontalCirclesPulse:
-            animationHorizontalCirclesPulse(animation, color: colorAnimation)
-        case .lineScaling:
-            animationLineScaling(animation, color: colorAnimation)
-        case .singleCirclePulse:
-            animationSingleCirclePulse(animation, color: colorAnimation)
-        case .multipleCirclePulse:
-            animationMultipleCirclePulse(animation, color: colorAnimation)
-        case .singleCircleScaleRipple:
-            animationSingleCircleScaleRipple(animation, color: colorAnimation)
-        case .multipleCircleScaleRipple:
-            animationMultipleCircleScaleRipple(animation, color: colorAnimation)
-        case .circleSpinFade:
-            animationCircleSpinFade(animation, color: colorAnimation)
-        case .lineSpinFade:
-            animationLineSpinFade(animation, color: colorAnimation)
-        case .circleRotateChase:
-            animationCircleRotateChase(animation, color: colorAnimation)
-        case .circleStrokeSpin:
-            animationCircleStrokeSpin(animation, color: colorAnimation)
-        }
-    }
-    
-    private func setupAnimatedIcon(_ animatedIcon:AnimatedIcon?) {
-        viewProgress?.removeFromSuperview()
-        viewAnimation?.removeFromSuperview()
-        staticImageView?.removeFromSuperview()
-        customView?.removeFromSuperview()
-        
-        if viewAnimatedIcon == nil {
-            viewAnimatedIcon = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
-        }
-        
-        if viewAnimatedIcon?.superview == nil {
-            toolbarHUD?.addSubview(viewAnimatedIcon!)
-        }
-        
-        // 清理旧的动画
-        viewAnimatedIcon?.layer.sublayers?.forEach { $0.removeAllAnimations() }
-        
-        // 根据图标类型创建对应动画
-        guard let icon = animatedIcon, let iconView = viewAnimatedIcon else { return }
-        
-        switch icon {
-        case .succeed:
-            animatedIconSucceed(iconView, color: colorAnimation, alpha: self.alpha)
-        case .failed:
-            animatedIconFailed(iconView, color: colorAnimation, alpha: self.alpha)
-        case .added:
-            animatedIconAdded(iconView, color: colorAnimation, alpha: self.alpha)
-        }
-    }
-    ///添加图片容器
-    private func setupStaticImage(_ staticImage: UIImage?) {
-        viewProgress?.removeFromSuperview()
-        viewAnimation?.removeFromSuperview()
-        viewAnimatedIcon?.removeFromSuperview()
-        customView?.removeFromSuperview()
-
-        if staticImageView == nil {
-            staticImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-            staticImageView?.contentMode = .scaleAspectFit
-        }
-
-        if staticImageView?.superview == nil {
-            toolbarHUD?.addSubview(staticImageView!)
-        }
-
-        staticImageView?.image = staticImage
-    }
-    ///添加自定义view容器
-    private func setupCustomView(_ customView: UIView?) {
-        viewProgress?.removeFromSuperview()
-        viewAnimation?.removeFromSuperview()
-        viewAnimatedIcon?.removeFromSuperview()
-        staticImageView?.removeFromSuperview()
-
-        // 如果传入了自定义view，则使用它
-        if let customView = customView {
-            self.customView?.removeFromSuperview()
-            self.customView = customView
-            toolbarHUD?.addSubview(customView)
-        } else {
-            // 否则创建默认容器
-            if self.customView == nil {
-                self.customView = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-            }
-            
-            if self.customView?.superview == nil {
-                toolbarHUD?.addSubview(self.customView!)
-            }
-        }
-    }
-    
-    ///添加全屏自定义view容器
-    private func setupFullScreenCustomView(_ customView: UIView?) {
-        viewProgress?.removeFromSuperview()
-        viewAnimation?.removeFromSuperview()
-        viewAnimatedIcon?.removeFromSuperview()
-        staticImageView?.removeFromSuperview()
-        self.customView?.removeFromSuperview()
-
-        // 如果传入了自定义view，则直接添加到背景view上
-        guard let customView = customView, let backgroundView = viewBackground else { return }
-        
-        self.customView = customView
-        backgroundView.addSubview(customView)
-        
-        // 设置全屏布局
-        customView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            customView.topAnchor.constraint(equalTo: backgroundView.topAnchor),
-            customView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor),
-            customView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor),
-            customView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor)
-        ])
-    }
-    ///计算文本大小
-    private func setupSize() {
-        var width = LayoutConstants.minHUDWidth
-        var height = LayoutConstants.minHUDHeight
-
-        if let text = labelStatus?.text {
-            let maxSize = CGSize(
-                width: LayoutConstants.maxLabelWidth,
-                height: LayoutConstants.maxLabelHeight
-            )
-            let attributes: [NSAttributedString.Key: Any] = [
-                .font: labelStatus?.font as Any
-            ]
-            var rectLabel = text.boundingRect(
-                with: maxSize,
-                options: .usesLineFragmentOrigin,
-                attributes: attributes,
-                context: nil
-            )
-
-            width = ceil(rectLabel.size.width) + LayoutConstants.horizontalPadding
-            height = ceil(rectLabel.size.height) + LayoutConstants.verticalPadding
-
-            width = max(width, LayoutConstants.minHUDWidth)
-
-            rectLabel.origin.x = (width - rectLabel.size.width) / 2
-            rectLabel.origin.y = (height - rectLabel.size.height) / 2 + LayoutConstants.labelOffsetY
-
-            labelStatus?.frame = rectLabel
-        }
-
-        // iPad适配：增加最小尺寸
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            width = max(width, LayoutConstants.iPadMinWidth)
-            height = max(height, LayoutConstants.iPadMinHeight)
-        }
-
-        toolbarHUD?.bounds = CGRect(x: 0, y: 0, width: width, height: height)
-
-        let centerX = width / 2
-        let centerY = labelStatus?.text != nil ? LayoutConstants.iconCenterY : height / 2
-
-        viewProgress?.center = CGPoint(x: centerX, y: centerY)
-        viewAnimation?.center = CGPoint(x: centerX, y: centerY)
-        viewAnimatedIcon?.center = CGPoint(x: centerX, y: centerY)
-        staticImageView?.center = CGPoint(x: centerX, y: centerY)
-        customView?.center = CGPoint(x: centerX, y: centerY)
-    }
-    
-    ///背景容器监听
-    @objc private func setupPosition(_ notification:Notification? = nil) {
-        
-        var heightKeyboard:CGFloat = 0
-        var animationDuration:TimeInterval = 0
-        
-        if let notification = notification {
-            let frameKeyborad = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect ?? CGRect.zero
-            animationDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval ?? 0
-            
-            if (notification.name == keyboardWillShow) || (notification.name == keyboardDidShow) {
-                heightKeyboard = frameKeyborad.size.height
-            } else if (notification.name == keyboardWillHide) || (notification.name == keyboardDidHide) {
-                heightKeyboard = 0
-            } else {
-                heightKeyboard = keyboardHeight()
-            }
-        } else {
-            heightKeyboard = keyboardHeight()
-        }
-        
-        let mainWindow = KeyWindows()!
-        let screen = mainWindow.bounds
-        let center = CGPoint(x: screen.size.width/2, y: (screen.size.height - heightKeyboard)/2)
-        
-        UIView.animate(withDuration: animationDuration, delay: 0, options: .allowUserInteraction, animations: {
-            self.toolbarHUD?.center = center
-            self.viewBackground?.frame = screen
-        }, completion: nil)
-    }
-    
-    ///获取最合适的容器高度
-    private func keyboardHeight() -> CGFloat {
-        // 优先使用通知中的键盘高度
-        if let keyboardWindowClass = NSClassFromString("UIRemoteKeyboardWindow"),
-           let inputSetContainerView = NSClassFromString("UIInputSetContainerView"),
-           let inputSetHostView = NSClassFromString("UIInputSetHostView"){
-            
-            if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                // 获取窗口列表
-                let windows = scene.windows
-                for window in windows {
-                    if window.isKind(of: keyboardWindowClass) {
-                        for firstSubView in window.subviews {
-                            if firstSubView.isKind(of: inputSetContainerView) {
-                                for secondSubView in firstSubView.subviews {
-                                    if secondSubView.isKind(of: inputSetHostView) {
-                                        return secondSubView.frame.size.height
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        // 备用方案：使用屏幕高度差值
-        if let window = KeyWindows() {
-            let screenHeight = UIScreen.main.bounds.height
-            let windowHeight = window.frame.height
-            let keyboardHeight = screenHeight - windowHeight
-            return keyboardHeight > 0 ? keyboardHeight : 0
-        }
-        
-        return 0
-    }
 }
 
-public func KeyWindows() -> UIWindow? {
-    var keyWindow:UIWindow?
-    keyWindow = UIApplication.shared.connectedScenes
-        .map({$0 as? UIWindowScene})
-        .compactMap({$0})
-        .first?.windows.first
-    return keyWindow
-}
+// MARK: - Appearance
 
-@available(iOS 15.0, *)
-private class ProgressView:UIView {
-    
-    var color: UIColor = .systemBackground {
-        didSet { setupLayers() }
-    }
-    private var progress:CGFloat = 0
-    
-    private var layerCircle = CAShapeLayer()
-    private var layerProgress = CAShapeLayer()
-    private var labelPercentage:UILabel = UILabel()
-    
-    convenience init(_ color: UIColor) {
-        self.init(frame: .zero)
-        self.color = color
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        setupLayers()
-    }
-    ///基本容器设置
-    func setupLayers() {
-        subviews.forEach { $0.removeFromSuperview() }
-        layer.sublayers?.forEach { $0.removeFromSuperlayer() }
-
-        let width = frame.size.width
-        let height = frame.size.height
-
-        let center = CGPoint(x: width/2, y: height/2)
-        let radiusCircle = width / 2
-        let radiusProgress = width / 2 - 5
-
-        let pathCircle = UIBezierPath(arcCenter: center, radius: radiusCircle, startAngle: -0.5 * .pi, endAngle: 1.5 * .pi, clockwise: true)
-        let pathProgress = UIBezierPath(arcCenter: center, radius: radiusProgress, startAngle: -0.5 * .pi, endAngle: 1.5 * .pi, clockwise: true)
-
-        layerCircle.path = pathCircle.cgPath
-        layerCircle.fillColor = UIColor.clear.cgColor
-        layerCircle.lineWidth = 3
-        layerCircle.strokeColor = color.cgColor
-
-        layerProgress.path = pathProgress.cgPath
-        layerProgress.fillColor = UIColor.clear.cgColor
-        layerProgress.lineWidth = 7
-        layerProgress.strokeColor = color.cgColor
-        layerProgress.strokeEnd = 0
-
-        layer.addSublayer(layerCircle)
-        layer.addSublayer(layerProgress)
-
-        labelPercentage.frame = self.bounds
-        labelPercentage.textColor = color
-        labelPercentage.textAlignment = .center
-        addSubview(labelPercentage)
-    }
-    
-    ///加载动画
-    func setProgress(_ value:CGFloat,duration:TimeInterval = 0.2) {
-        let animation = CABasicAnimation(keyPath: "strokeEnd")
-        animation.duration = duration
-        animation.fromValue = progress
-        animation.toValue = value
-        animation.fillMode = .both
-        animation.isRemovedOnCompletion = false
-        layerProgress.add(animation, forKey: "animation")
-        
-        progress = value
-        labelPercentage.text = "\(Int(value*100))%"
-        
-    }
-    
-}
-
-
-@available(iOS 15.0, *)
 public extension TFYProgressSwiftHUD {
-    ///选择展示内部动画属于
-    class var animationType:AnimationType {
-        get { shared.animationType }
-        set { shared.animationType = newValue }
+    class var animationType: AnimationType {
+        get { valueOnMain { shared.selectedAnimationType } }
+        set { onMain { shared.selectedAnimationType = newValue; shared.updateAppearance() } }
     }
-    ///背景颜色自定义
     class var colorBackground: UIColor {
-        get { shared.colorBackground }
-        set { shared.colorBackground = newValue }
+        get { valueOnMain { shared.selectedBackgroundColor } }
+        set { onMain { shared.selectedBackgroundColor = newValue; shared.updateAppearance() } }
     }
-    ///加载视图背景颜色
     class var colorHUD: UIColor {
-        get { shared.colorHUD }
-        set { shared.colorHUD = newValue }
+        get { valueOnMain { shared.selectedHUDColor } }
+        set { onMain { shared.selectedHUDColor = newValue; shared.updateAppearance() } }
     }
-    ////字体颜色
     class var colorStatus: UIColor {
-        get { shared.colorStatus }
-        set { shared.colorStatus = newValue }
+        get { valueOnMain { shared.selectedStatusColor } }
+        set { onMain { shared.selectedStatusColor = newValue; shared.updateAppearance() } }
     }
-    ///动画颜色
     class var colorAnimation: UIColor {
-        get { shared.colorAnimation }
-        set { shared.colorAnimation = newValue }
+        get { valueOnMain { shared.selectedAnimationColor } }
+        set { onMain { shared.selectedAnimationColor = newValue; shared.updateAppearance() } }
     }
-    ///进度条颜色
     class var colorProgress: UIColor {
-        get { shared.colorProgress }
-        set { shared.colorProgress = newValue }
+        get { valueOnMain { shared.selectedProgressColor } }
+        set { onMain { shared.selectedProgressColor = newValue; shared.updateAppearance() } }
     }
-    ///字体大小
     class var fontStatus: UIFont {
-        get { shared.fontStatus }
-        set { shared.fontStatus = newValue }
+        get { valueOnMain { shared.selectedStatusFont } }
+        set { onMain { shared.selectedStatusFont = newValue; shared.updateAppearance() } }
     }
-    ///加载成功自定义图片
     class var imageSuccess: UIImage {
-        get { shared.imageSuccess }
-        set { shared.imageSuccess = newValue }
+        get { valueOnMain { shared.selectedSuccessImage } }
+        set { onMain { shared.selectedSuccessImage = newValue } }
     }
-    ///加载失败自定义图片
     class var imageError: UIImage {
-        get { shared.imageError }
-        set { shared.imageError = newValue }
+        get { valueOnMain { shared.selectedErrorImage } }
+        set { onMain { shared.selectedErrorImage = newValue } }
+    }
+    class var minimumDismissTimeInterval: TimeInterval {
+        get { valueOnMain { shared.minimumDismissDelay } }
+        set {
+            onMain {
+                shared.minimumDismissDelay = max(0, newValue)
+                shared.maximumDismissDelay = max(shared.maximumDismissDelay, shared.minimumDismissDelay)
+            }
+        }
+    }
+    class var maximumDismissTimeInterval: TimeInterval {
+        get { valueOnMain { shared.maximumDismissDelay } }
+        set { onMain { shared.maximumDismissDelay = max(shared.minimumDismissDelay, newValue) } }
+    }
+    class var isVisible: Bool { valueOnMain { shared.overlayView?.superview != nil } }
+    class func resetAppearance() { onMain { shared.resetToDefaults() } }
+}
+
+// MARK: - Presentation API
+
+public extension TFYProgressSwiftHUD {
+    class func dismiss(completion: (() -> Void)? = nil) {
+        onMain { shared.hide(completion: completion) }
+    }
+
+    class func dismiss(after delay: TimeInterval) {
+        onMain {
+            shared.dismissWorkItem?.cancel()
+            let item = DispatchWorkItem { [weak hud = shared] in hud?.hide(completion: nil) }
+            shared.dismissWorkItem = item
+            DispatchQueue.main.asyncAfter(deadline: .now() + max(0, delay), execute: item)
+        }
+    }
+
+    class func show(_ status: String? = nil, interaction: Bool = true) {
+        onMain { shared.present(status: status, content: .loading, automaticallyDismiss: false, interaction: interaction) }
+    }
+
+    class func show(_ status: String? = nil, in view: UIView, interaction: Bool = true) {
+        onMain {
+            shared.present(
+                status: status, content: .loading, automaticallyDismiss: false,
+                interaction: interaction, in: view
+            )
+        }
+    }
+
+    class func show(_ status: String? = nil, icon: AlertIcon, interaction: Bool = true) {
+        onMain {
+            shared.present(
+                status: status, content: .image(icon.image?.withRenderingMode(.alwaysTemplate)),
+                automaticallyDismiss: true, interaction: interaction
+            )
+        }
+    }
+
+    class func show(_ status: String? = nil, icon: AnimatedIcon, interaction: Bool = true) {
+        onMain {
+            shared.present(status: status, content: .animatedIcon(icon), automaticallyDismiss: true, interaction: interaction)
+        }
+    }
+
+    class func showSuccess(_ status: String? = nil, image: UIImage? = nil, interaction: Bool = true) {
+        onMain {
+            shared.present(
+                status: status, content: .image(image ?? shared.selectedSuccessImage),
+                automaticallyDismiss: true, interaction: interaction
+            )
+        }
+    }
+
+    class func showError(_ status: String? = nil, image: UIImage? = nil, interaction: Bool = true) {
+        onMain {
+            shared.present(
+                status: status, content: .image(image ?? shared.selectedErrorImage),
+                automaticallyDismiss: true, interaction: interaction
+            )
+        }
+    }
+
+    class func showSucceed(_ status: String? = nil, interaction: Bool = true) {
+        show(status, icon: AnimatedIcon.succeed, interaction: interaction)
+    }
+    class func showFailed(_ status: String? = nil, interaction: Bool = true) {
+        show(status, icon: AnimatedIcon.failed, interaction: interaction)
+    }
+    class func showAdded(_ status: String? = nil, interaction: Bool = true) {
+        show(status, icon: AnimatedIcon.added, interaction: interaction)
+    }
+
+    class func showProgress(_ progress: CGFloat, interaction: Bool = false) {
+        showProgress(nil, progress, interaction: interaction)
+    }
+    class func showProgress(_ status: String?, _ progress: CGFloat, interaction: Bool = false) {
+        onMain {
+            shared.present(status: status, content: .progress(progress), automaticallyDismiss: false, interaction: interaction)
+        }
+    }
+    class func showProgress(_ progress: CGFloat, status: String?, interaction: Bool = false) {
+        showProgress(status, progress, interaction: interaction)
+    }
+
+    /// Presents progress inside a specific view instead of the active window.
+    class func showProgress(
+        _ progress: CGFloat,
+        status: String? = nil,
+        in view: UIView,
+        interaction: Bool = false
+    ) {
+        onMain {
+            shared.present(
+                status: status,
+                content: .progress(progress),
+                automaticallyDismiss: false,
+                interaction: interaction,
+                in: view
+            )
+        }
+    }
+
+    class func show(_ status: String? = nil, customView: UIView, interaction: Bool = true) {
+        show(status, customView: customView, hide: false, interaction: interaction)
+    }
+    class func show(_ status: String? = nil, customView: UIView, hide: Bool = true, interaction: Bool = true) {
+        onMain {
+            shared.present(status: status, content: .custom(customView), automaticallyDismiss: hide, interaction: interaction)
+        }
+    }
+
+    class func showFullScreen(_ customView: UIView, interaction: Bool = false) {
+        showFullScreen(customView, hide: false, interaction: interaction)
+    }
+    class func showFullScreen(_ customView: UIView, hide: Bool = true, interaction: Bool = false) {
+        onMain {
+            shared.present(status: nil, content: .fullScreen(customView), automaticallyDismiss: hide, interaction: interaction)
+        }
     }
 }
 
-public extension TFYProgressSwiftHUD {
-    ///隐藏视图
-    class func dismiss() {
-        DispatchQueue.main.async {
-            shared.hudHide()
-        }
+/// Returns the key window for the foreground scene. Kept for source compatibility.
+@available(*, deprecated, message: "Use scene-aware presentation or show(_:in:interaction:).")
+public func KeyWindows() -> UIWindow? {
+    let resolve = {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .filter { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }
+            .flatMap(\.windows)
+            .first(where: { $0.isKeyWindow && !$0.isHidden })
     }
-    ///带有加载圈文体的弹出视图
-    class func show(_ status:String? = nil,interaction:Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status,hide: false, interaction: interaction)
-        }
-    }
-    ///默认图片的文本弹出视图
-    class func show(_ status:String? = nil,icon:AlertIcon,interaction:Bool = true) {
-        let image = icon.image?.withTintColor(shared.colorAnimation, renderingMode: .alwaysOriginal)
+    return Thread.isMainThread ? resolve() : DispatchQueue.main.sync(execute: resolve)
+}
 
-        DispatchQueue.main.async {
-            shared.setup(status: status, staticImage: image, hide: true, interaction: interaction)
-        }
+private final class HUDOverlayView: UIView {
+    var onLayout: (() -> Void)?
+    var onTraitChange: (() -> Void)?
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        onLayout?()
     }
-    ///带有选择图片类型的文本弹出
-    class func show(_ status: String? = nil, icon animatedIcon: AnimatedIcon, interaction: Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, animatedIcon: animatedIcon, hide: true, interaction: interaction)
-        }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else { return }
+        onTraitChange?()
     }
-    ///自定义图片文本弹出视图
-    class func showSuccess(_ status: String? = nil, image: UIImage? = nil, interaction: Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, staticImage: image ?? shared.imageSuccess, hide: true, interaction: interaction)
-        }
+}
+
+private final class HUDProgressView: UIView {
+    var color: UIColor { didSet { updateColors() } }
+    private let trackLayer = CAShapeLayer()
+    private let progressLayer = CAShapeLayer()
+    private let percentageLabel = UILabel()
+    private var progress: CGFloat = 0
+
+    init(color: UIColor) {
+        self.color = color
+        super.init(frame: .zero)
+        setup()
     }
-    ///带有图片失败弹出视图
-    class func showError(_ status: String? = nil, image: UIImage? = nil, interaction: Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, staticImage: image ?? shared.imageError, hide: true, interaction: interaction)
-        }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let trackRadius = max(0, min(bounds.width, bounds.height) / 2 - 2)
+        trackLayer.path = circlePath(center: center, radius: trackRadius)
+        progressLayer.path = circlePath(center: center, radius: max(0, trackRadius - 5))
+        percentageLabel.frame = bounds
     }
-    ///请求成功只有文本弹出视图
-    class func showSucceed(_ status: String? = nil, interaction: Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, animatedIcon: .succeed, hide: true, interaction: interaction)
+
+    func setProgress(_ value: CGFloat, animated: Bool) {
+        let clamped = min(max(value.isFinite ? value : 0, 0), 1)
+        progressLayer.removeAnimation(forKey: "progress")
+        if animated && !UIAccessibility.isReduceMotionEnabled {
+            let animation = CABasicAnimation(keyPath: "strokeEnd")
+            animation.fromValue = progressLayer.presentation()?.strokeEnd ?? progress
+            animation.toValue = clamped
+            animation.duration = 0.18
+            animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            progressLayer.add(animation, forKey: "progress")
         }
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        progressLayer.strokeEnd = clamped
+        CATransaction.commit()
+        progress = clamped
+        let percentage = Int((clamped * 100).rounded())
+        percentageLabel.text = "\(percentage)%"
+        accessibilityValue = "\(percentage)%"
     }
-    ///请求失败只有文本视图弹出
-    class func showFailed(_ status: String? = nil, interaction: Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, animatedIcon: .failed, hide: true, interaction: interaction)
-        }
+
+    private func setup() {
+        isAccessibilityElement = true
+        accessibilityIdentifier = "tfy.hud.progress"
+        accessibilityLabel = NSLocalizedString("Progress", comment: "HUD accessibility label")
+        accessibilityTraits = .updatesFrequently
+        trackLayer.fillColor = UIColor.clear.cgColor
+        trackLayer.lineWidth = 3
+        trackLayer.opacity = 0.35
+        progressLayer.fillColor = UIColor.clear.cgColor
+        progressLayer.lineWidth = 7
+        progressLayer.lineCap = .round
+        layer.addSublayer(trackLayer)
+        layer.addSublayer(progressLayer)
+        percentageLabel.textAlignment = .center
+        percentageLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .semibold)
+        percentageLabel.adjustsFontForContentSizeCategory = true
+        addSubview(percentageLabel)
+        updateColors()
     }
-    ///描述文本弹出视图
-    class func showAdded(_ status: String? = nil, interaction: Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, animatedIcon: .added, hide: true, interaction: interaction)
-        }
+
+    private func circlePath(center: CGPoint, radius: CGFloat) -> CGPath {
+        UIBezierPath(
+            arcCenter: center, radius: radius, startAngle: -.pi / 2,
+            endAngle: .pi * 1.5, clockwise: true
+        ).cgPath
     }
-    ///带有加载进度条视图弹出
-    class func showProgress(_ progress: CGFloat, interaction: Bool = false) {
-        DispatchQueue.main.async {
-            shared.setup(progress: progress, hide: false, interaction: interaction)
-        }
+
+    private func updateColors() {
+        trackLayer.strokeColor = color.cgColor
+        progressLayer.strokeColor = color.cgColor
+        percentageLabel.textColor = color
     }
-    /// 自定义进度条视图弹出
-    class func showProgress(_ status: String?, _ progress: CGFloat, interaction: Bool = false) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, progress: progress, hide: false, interaction: interaction)
-        }
-    }
-    
-    /// 自定义view弹出视图
-    class func show(_ status: String? = nil, customView: UIView, interaction: Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, customView: customView, hide: false, interaction: interaction)
-        }
-    }
-    
-    /// 自定义view弹出视图（带自动隐藏）
-    class func show(_ status: String? = nil, customView: UIView, hide: Bool = true, interaction: Bool = true) {
-        DispatchQueue.main.async {
-            shared.setup(status: status, customView: customView, hide: hide, interaction: interaction)
-        }
-    }
-    
-    /// 全屏自定义view弹出视图
-    class func showFullScreen(_ customView: UIView, interaction: Bool = false) {
-        DispatchQueue.main.async {
-            shared.setup(fullScreenCustomView: customView, hide: false, interaction: interaction)
-        }
-    }
-    
-    /// 全屏自定义view弹出视图（带自动隐藏）
-    class func showFullScreen(_ customView: UIView, hide: Bool = true, interaction: Bool = false) {
-        DispatchQueue.main.async {
-            shared.setup(fullScreenCustomView: customView, hide: hide, interaction: interaction)
-        }
-    }
-    
 }

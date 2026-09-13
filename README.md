@@ -1,430 +1,202 @@
-# 🎨 TFYProgressSwiftHUD
+# TFYProgressSwiftHUD
 
 [![Version](https://img.shields.io/cocoapods/v/TFYProgressSwiftHUD.svg?style=flat)](https://cocoapods.org/pods/TFYProgressSwiftHUD)
-[![License](https://img.shields.io/cocoapods/l/TFYProgressSwiftHUD.svg?style=flat)](https://cocoapods.org/pods/TFYProgressSwiftHUD)
-[![Platform](https://img.shields.io/cocoapods/p/TFYProgressSwiftHUD.svg?style=flat)](https://cocoapods.org/pods/TFYProgressSwiftHUD)
-[![Swift](https://img.shields.io/badge/Swift-5.0-orange.svg)](https://swift.org)
-[![iOS](https://img.shields.io/badge/iOS-15.0+-blue.svg)](https://developer.apple.com/ios/)
-[![Xcode](https://img.shields.io/badge/Xcode-14.0+-green.svg)](https://developer.apple.com/xcode/)
+[![Platform](https://img.shields.io/badge/iOS-15.0%2B-blue.svg)](https://developer.apple.com/ios/)
+[![Swift](https://img.shields.io/badge/Swift-5.7%2B-orange.svg)](https://swift.org)
+[![License](https://img.shields.io/cocoapods/l/TFYProgressSwiftHUD.svg?style=flat)](LICENSE)
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Made%20with-Swift-red.svg" alt="Made with Swift">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
-  <img src="https://img.shields.io/badge/Platform-iOS-lightgrey.svg" alt="Platform">
-</div>
+一个轻量、可定制、场景感知的 UIKit HUD。内置 11 种加载动画、确定进度、结果状态、SF Symbols、自定义视图和全屏内容。
 
----
+当前版本：`2.2.0`。完整版本记录请查看 [CHANGELOG.md](CHANGELOG.md)。
 
-## ✨ 简介
+## 特性
 
-**TFYProgressSwiftHUD** 是一个功能强大、设计优雅的 Swift HUD（Heads Up Display）库，专为现代 iOS 应用设计。提供丰富的动画效果、灵活的定制选项和简洁易用的 API，让您的应用拥有专业级的用户反馈体验。
+- 11 种 Core Animation 加载效果和 3 种结果动画
+- 确定进度，自动把异常值限制在 `0...1`
+- 正确选择当前前台 Scene 的 key window，也可指定宿主 View
+- 支持深色模式、Dynamic Type、VoiceOver 和“减弱动态效果”
+- 自动避让键盘，旋转和分屏尺寸变化时自动重排
+- 高频进度更新复用视图，快速替换与重复关闭安全
+- CocoaPods 与 Swift Package Manager 双支持
+- Demo 覆盖全部公开能力和稳定性场景
 
-### 🎯 核心优势
+## 系统要求
 
-- 🚀 **高性能** - 基于 Core Animation 的流畅动画
-- 🎨 **丰富动画** - 11种精美加载动画 + 3种状态动画
-- 🌙 **深色模式** - 完美支持系统外观切换
-- 📱 **设备适配** - iPhone/iPad 完美适配
-- ⚡ **简单易用** - 一行代码即可使用
-- 🔧 **高度可定制** - 颜色、字体、动画类型随心配置
+- iOS 15.0+
+- Swift 5.7+
+- Xcode 14+
 
----
+## 安装
 
-## 🎪 功能特性
+### Swift Package Manager
 
-### 🎨 动画效果
-| 动画类型 | 描述 | 适用场景 |
-|---------|------|----------|
-| 🔄 系统活动指示器 | 经典旋转加载 | 通用加载 |
-| ⭕ 水平圆脉冲 | 三个圆点脉冲 | 网络请求 |
-| 📊 线条缩放 | 五条线缩放 | 数据处理 |
-| ⭕ 单圆脉冲 | 单个圆脉冲 | 轻量级加载 |
-| ⭕⭕⭕ 多圆脉冲 | 多个圆脉冲 | 复杂操作 |
-| 🌊 单圆缩放波纹 | 波纹扩散效果 | 文件上传 |
-| 🌊🌊🌊 多圆缩放波纹 | 多层波纹 | 视频处理 |
-| 💫 圆形旋转淡入淡出 | 旋转+透明度 | 图片处理 |
-| 📈 线条旋转淡入淡出 | 线条旋转 | 数据同步 |
-| 🎯 圆形旋转追逐 | 追逐动画 | 游戏加载 |
-| 🎨 圆形描边旋转 | 描边旋转 | 艺术类应用 |
+在 Xcode 的 **File → Add Package Dependencies** 中添加：
 
-### 🎪 状态图标
-- ✅ **成功图标** - 优雅的勾选动画
-- ❌ **失败图标** - 清晰的错误提示
-- ➕ **添加图标** - 友好的添加确认
+```text
+https://github.com/13662049573/TFYProgressSwiftHUD.git
+```
 
-### 🏷️ 系统图标集成
-支持19种SF Symbols图标，包括：
-- ❤️ 爱心、📄 文档、🔖 书签
-- 🌙 月亮、⭐ 星星、⚠️ 警告
-- 🚩 旗帜、💬 消息、❓ 问题
-- ⚡ 闪电、🔀 随机、⏏️ 弹出
-- 💳 卡片、🔄 旋转、👍 点赞
-- 👎 点踩、🤚 隐私、🛒 购物车、🔍 搜索
+或在 `Package.swift` 中声明：
 
----
-
-## 📱 系统要求
-
-- **iOS**: 15.0+
-- **Swift**: 5.0+
-- **Xcode**: 14.0+
-- **CocoaPods**: 1.0+
-
----
-
-## 🚀 快速安装
+```swift
+dependencies: [
+    .package(
+        url: "https://github.com/13662049573/TFYProgressSwiftHUD.git",
+        from: "2.2.0"
+    )
+]
+```
 
 ### CocoaPods
 
 ```ruby
-# Podfile
-pod 'TFYProgressSwiftHUD'
+platform :ios, '15.0'
+pod 'TFYProgressSwiftHUD', '~> 2.2'
 ```
 
-```bash
-# 终端执行
-pod install
-```
-
-### Swift Package Manager
-
-```swift
-// Package.swift
-dependencies: [
-    .package(url: "https://github.com/13662049573/TFYProgressSwiftHUD.git", from: "2.1.3")
-]
-```
-
----
-
-## 🎯 快速开始
-
-### 基础使用
+## 快速开始
 
 ```swift
 import TFYProgressSwiftHUD
 
-// 显示加载动画
-TFYProgressSwiftHUD.show("请稍等...")
-
-// 显示成功提示
-TFYProgressSwiftHUD.showSuccess("操作成功!")
-
-// 显示错误提示
-TFYProgressSwiftHUD.showError("发生错误")
-
-// 显示进度
-TFYProgressSwiftHUD.showProgress(0.5, "加载中...")
-
-// 隐藏HUD
+TFYProgressSwiftHUD.show("正在加载…")
+TFYProgressSwiftHUD.showSucceed("保存成功")
+TFYProgressSwiftHUD.showError("网络连接失败")
+TFYProgressSwiftHUD.showProgress(0.45, status: "正在上传")
 TFYProgressSwiftHUD.dismiss()
 ```
 
-### 高级用法
+状态和图标提示会自动隐藏；加载和进度默认持续显示，需在任务完成时调用 `dismiss()`。
+
+## 加载动画
 
 ```swift
-// 自定义动画类型
 TFYProgressSwiftHUD.animationType = .circleRotateChase
+TFYProgressSwiftHUD.show("正在同步")
 
-// 使用系统图标
-TFYProgressSwiftHUD.show("已收藏!", icon: .bookmark)
+// 也可遍历全部动画，用于设置页或 Demo
+for type in AnimationType.allCases {
+    print(type)
+}
+```
 
-// 自定义视图
-let customView = createCustomAnimationView()
-TFYProgressSwiftHUD.show("自定义动画", customView: customView)
+内置类型包括：
 
-// 全屏自定义视图
-let fullScreenView = createFullScreenView()
+```swift
+.systemActivityIndicator
+.horizontalCirclesPulse
+.lineScaling
+.singleCirclePulse
+.multipleCirclePulse
+.singleCircleScaleRipple
+.multipleCircleScaleRipple
+.circleSpinFade
+.lineSpinFade
+.circleRotateChase
+.circleStrokeSpin
+```
+
+## 进度与结果
+
+```swift
+TFYProgressSwiftHUD.showProgress(0.25, status: "准备资源")
+TFYProgressSwiftHUD.showProgress(0.80, status: "即将完成")
+
+TFYProgressSwiftHUD.showSucceed("上传完成")
+TFYProgressSwiftHUD.showFailed("上传失败")
+TFYProgressSwiftHUD.showAdded("已添加")
+
+TFYProgressSwiftHUD.showSuccess("完成")
+TFYProgressSwiftHUD.showError("出错了")
+TFYProgressSwiftHUD.show("已收藏", icon: .bookmark)
+```
+
+自动隐藏时长会根据文本长度计算，也可调整边界：
+
+```swift
+TFYProgressSwiftHUD.minimumDismissTimeInterval = 1.5
+TFYProgressSwiftHUD.maximumDismissTimeInterval = 6
+TFYProgressSwiftHUD.dismiss(after: 2)
+```
+
+## 交互与宿主视图
+
+为兼容旧版本，`interaction` 的语义保持不变：
+
+- `true`：触摸穿透 HUD，用户仍可操作背后的页面。
+- `false`：显示遮罩并阻止重复操作。
+
+```swift
+TFYProgressSwiftHUD.show("后台刷新中", interaction: true)
+TFYProgressSwiftHUD.show("正在提交", interaction: false)
+
+// 仅覆盖某个容器，适合卡片、子页面或多窗口场景
+TFYProgressSwiftHUD.show("刷新列表", in: collectionView, interaction: false)
+```
+
+## 外观定制
+
+```swift
+TFYProgressSwiftHUD.colorBackground = UIColor.systemBlue.withAlphaComponent(0.18)
+TFYProgressSwiftHUD.colorHUD = .systemBlue
+TFYProgressSwiftHUD.colorStatus = .white
+TFYProgressSwiftHUD.colorAnimation = .white
+TFYProgressSwiftHUD.colorProgress = .white
+
+let baseFont = UIFont.systemFont(ofSize: 22, weight: .bold)
+TFYProgressSwiftHUD.fontStatus = UIFontMetrics(forTextStyle: .title2)
+    .scaledFont(for: baseFont)
+
+TFYProgressSwiftHUD.resetAppearance()
+```
+
+默认颜色均为语义色，会自动适配深色模式。使用自定义字体时建议通过 `UIFontMetrics` 支持 Dynamic Type。
+
+## 自定义与全屏内容
+
+```swift
+let customView = UIActivityIndicatorView(style: .large)
+customView.frame = CGRect(x: 0, y: 0, width: 72, height: 72)
+customView.startAnimating()
+
+TFYProgressSwiftHUD.show("自定义加载", customView: customView)
+TFYProgressSwiftHUD.show("操作完成", customView: customView, hide: true)
+
+let fullScreenView = MyFullScreenLoadingView()
 TFYProgressSwiftHUD.showFullScreen(fullScreenView)
+TFYProgressSwiftHUD.dismiss(after: 3)
 ```
 
----
+## 可访问性与稳定性
 
-## 🎨 自定义配置
+- HUD 状态、加载和进度提供 VoiceOver 标签与进度值。
+- 开启“减弱动态效果”时，自定义循环加载动画自动替换为系统指示器。
+- 文本使用 Dynamic Type，并支持多行与紧凑宽度。
+- 键盘位置通过公开通知计算，不依赖 UIKit 私有类。
+- 所有公开显示 API 都可以从后台线程安全调用。
 
-### 颜色定制
+## Demo 与测试
 
-```swift
-// 背景颜色
-TFYProgressSwiftHUD.colorBackground = UIColor.black.withAlphaComponent(0.3)
-
-// HUD颜色
-TFYProgressSwiftHUD.colorHUD = UIColor.systemGray6
-
-// 文字颜色
-TFYProgressSwiftHUD.colorStatus = UIColor.label
-
-// 动画颜色
-TFYProgressSwiftHUD.colorAnimation = UIColor.systemBlue
-
-// 进度条颜色
-TFYProgressSwiftHUD.colorProgress = UIColor.systemGreen
-```
-
-### 字体定制
-
-```swift
-// 设置字体
-TFYProgressSwiftHUD.fontStatus = UIFont.boldSystemFont(ofSize: 18)
-
-// 使用系统字体
-TFYProgressSwiftHUD.fontStatus = UIFont.systemFont(ofSize: 16, weight: .medium)
-```
-
-### 图标定制
-
-```swift
-// 自定义成功图标
-TFYProgressSwiftHUD.imageSuccess = UIImage(named: "custom-success")
-
-// 自定义错误图标
-TFYProgressSwiftHUD.imageError = UIImage(named: "custom-error")
-```
-
----
-
-## 📚 API 参考
-
-### 显示方法
-
-```swift
-// 基础显示
-TFYProgressSwiftHUD.show(_ status: String?, interaction: Bool = true)
-
-// 带图标的显示
-TFYProgressSwiftHUD.show(_ status: String?, icon: AlertIcon, interaction: Bool = true)
-
-// 动画图标显示
-TFYProgressSwiftHUD.show(_ status: String?, icon animatedIcon: AnimatedIcon, interaction: Bool = true)
-
-// 成功/错误显示
-TFYProgressSwiftHUD.showSuccess(_ status: String?, image: UIImage? = nil, interaction: Bool = true)
-TFYProgressSwiftHUD.showError(_ status: String?, image: UIImage? = nil, interaction: Bool = true)
-
-// 状态显示
-TFYProgressSwiftHUD.showSucceed(_ status: String?, interaction: Bool = true)
-TFYProgressSwiftHUD.showFailed(_ status: String?, interaction: Bool = true)
-TFYProgressSwiftHUD.showAdded(_ status: String?, interaction: Bool = true)
-
-// 进度显示
-TFYProgressSwiftHUD.showProgress(_ progress: CGFloat, interaction: Bool = false)
-TFYProgressSwiftHUD.showProgress(_ status: String?, _ progress: CGFloat, interaction: Bool = false)
-
-// 自定义视图
-TFYProgressSwiftHUD.show(_ status: String?, customView: UIView, interaction: Bool = true)
-TFYProgressSwiftHUD.showFullScreen(_ customView: UIView, interaction: Bool = false)
-
-// 隐藏
-TFYProgressSwiftHUD.dismiss()
-```
-
-### 枚举类型
-
-```swift
-// 动画类型
-public enum AnimationType {
-    case systemActivityIndicator
-    case horizontalCirclesPulse
-    case lineScaling
-    case singleCirclePulse
-    case multipleCirclePulse
-    case singleCircleScaleRipple
-    case multipleCircleScaleRipple
-    case circleSpinFade
-    case lineSpinFade
-    case circleRotateChase
-    case circleStrokeSpin
-}
-
-// 动画图标
-public enum AnimatedIcon {
-    case succeed
-    case failed
-    case added
-}
-
-// 系统图标
-public enum AlertIcon {
-    case heart, doc, bookmark, moon, star
-    case exclamation, flag, message, question
-    case bolt, shuffle, eject, card, rotate
-    case like, dislike, privacy, cart, search
-}
-```
-
----
-
-## 🎬 使用示例
-
-### 网络请求示例
-
-```swift
-func fetchUserData() {
-    // 显示加载
-    TFYProgressSwiftHUD.show("获取用户信息...")
-    
-    // 模拟网络请求
-    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-        // 请求成功
-        TFYProgressSwiftHUD.showSuccess("获取成功!")
-        
-        // 或者请求失败
-        // TFYProgressSwiftHUD.showError("网络错误")
-    }
-}
-```
-
-### 文件上传示例
-
-```swift
-func uploadFile() {
-    var progress: CGFloat = 0
-    
-    // 显示进度
-    TFYProgressSwiftHUD.showProgress(progress, "上传中...")
-    
-    // 模拟上传进度
-    Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
-        progress += 0.01
-        TFYProgressSwiftHUD.showProgress(progress, "上传中...")
-        
-        if progress >= 1.0 {
-            timer.invalidate()
-            TFYProgressSwiftHUD.showSuccess("上传完成!")
-        }
-    }
-}
-```
-
-### 自定义动画示例
-
-```swift
-func showCustomAnimation() {
-    // 创建自定义动画视图
-    let customView = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-    
-    // 添加动画效果
-    let animation = CABasicAnimation(keyPath: "transform.rotation")
-    animation.toValue = NSNumber(value: Double.pi * 2)
-    animation.duration = 1
-    animation.repeatCount = .infinity
-    
-    customView.layer.add(animation, forKey: "rotation")
-    
-    // 显示自定义动画
-    TFYProgressSwiftHUD.show("自定义动画", customView: customView)
-}
-```
-
----
-
-## 🔧 高级功能
-
-### 深色模式支持
-
-库自动适配系统外观变化，支持深色模式：
-
-```swift
-// 自动适配系统外观
-// 无需额外配置，库会自动处理
-```
-
-### 键盘适配
-
-自动处理键盘显示/隐藏事件：
-
-```swift
-// 自动适配键盘
-// 无需额外配置
-```
-
-### 设备方向适配
-
-自动处理设备方向变化：
-
-```swift
-// 自动适配设备方向
-// 无需额外配置
-```
-
----
-
-## 🐛 故障排除
-
-### 常见问题
-
-**Q: 动画不显示？**
-A: 确保在主线程调用，检查iOS版本是否支持。
-
-**Q: 颜色不生效？**
-A: 确保在显示HUD之前设置颜色属性。
-
-**Q: 自定义视图不显示？**
-A: 确保自定义视图有正确的frame和内容。
-
-### 调试技巧
-
-```swift
-// 开启调试模式
-#if DEBUG
-    print("TFYProgressSwiftHUD Debug: \(message)")
-#endif
-```
-
----
-
-## 🤝 贡献指南
-
-我们欢迎所有形式的贡献！
-
-### 如何贡献
-
-1. Fork 这个项目
-2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交你的更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开一个 Pull Request
-
-### 开发环境
+打开 `TFYProgressSwiftHUD.xcworkspace`，运行 `TFYProgressSwiftHUD` Scheme。Demo 包含快速开始、全部动画、进度、结果图标、主题、Lottie、自定义/全屏内容，以及后台调用、快速替换、键盘避让等场景。
 
 ```bash
-# 克隆项目
-git clone https://github.com/13662049573/TFYProgressSwiftHUD.git
-
-# 安装依赖
-pod install
-
-# 打开项目
-open TFYProgressSwiftHUD.xcworkspace
+xcodebuild \
+  -workspace TFYProgressSwiftHUD.xcworkspace \
+  -scheme TFYProgressSwiftHUD \
+  -destination 'platform=iOS Simulator,name=iPhone 18 Pro' \
+  test
 ```
 
----
+## 2.2.0 更新摘要
 
-## 📄 许可证
+- 新增 Swift Package Manager 支持和指定宿主 View 的展示 API。
+- 重构窗口选择、键盘避让、进度更新及显示/关闭生命周期。
+- 新增深色模式、Dynamic Type、VoiceOver 与“减弱动态效果”适配。
+- 全面重制 Demo，并补充单元测试和 UI 自动化测试。
+- 保持现有 CocoaPods 集成方式及旧版公开 API 兼容。
 
-本项目基于 **MIT** 许可证开源。详见 [LICENSE](LICENSE) 文件。
+详细变更及升级说明请参阅 [CHANGELOG.md](CHANGELOG.md)。
 
----
+## License
 
-## 👨‍💻 作者
-
-**田风有** - [GitHub](https://github.com/13662049573)
-
-- 📧 Email: 420144542@qq.com
-- 🌐 Website: [GitHub Profile](https://github.com/13662049573)
-
----
-
-## 🙏 致谢
-
-感谢所有为这个项目做出贡献的开发者！
-
-- [CocoaPods](https://cocoapods.org/) - 依赖管理
-- [Lottie](https://github.com/airbnb/lottie-ios) - 动画支持
-- [SF Symbols](https://developer.apple.com/sf-symbols/) - 系统图标
-
----
-
-<div align="center">
-  <sub>Built with ❤️ by 田风有</sub>
-</div>
+TFYProgressSwiftHUD 基于 [MIT License](LICENSE) 发布。

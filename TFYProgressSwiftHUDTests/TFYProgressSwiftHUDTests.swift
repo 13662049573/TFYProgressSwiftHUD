@@ -1,33 +1,36 @@
-//
-//  TFYProgressSwiftHUDTests.swift
-//  TFYProgressSwiftHUDTests
-//
-//  Created by 田风有 on 2021/4/10.
-//
-
 import XCTest
+import UIKit
 @testable import TFYProgressSwiftHUD
 
-class TFYProgressSwiftHUDTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+final class TFYProgressSwiftHUDTests: XCTestCase {
+    override func tearDown() {
+        TFYProgressSwiftHUD.dismiss()
+        TFYProgressSwiftHUD.resetAppearance()
+        super.tearDown()
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    func testAllDocumentedCasesAreExposed() {
+        XCTAssertEqual(AnimationType.allCases.count, 11)
+        XCTAssertEqual(AnimatedIcon.allCases.count, 3)
+        XCTAssertEqual(AlertIcon.allCases.count, 19)
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testScopedPresentationAndDismissal() {
+        let host = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        TFYProgressSwiftHUD.show("Testing", in: host, interaction: false)
+        XCTAssertTrue(TFYProgressSwiftHUD.isVisible)
+        XCTAssertEqual(host.subviews.count, 1)
+
+        let dismissed = expectation(description: "HUD dismissed")
+        TFYProgressSwiftHUD.dismiss { dismissed.fulfill() }
+        wait(for: [dismissed], timeout: 1)
+        XCTAssertFalse(TFYProgressSwiftHUD.isVisible)
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testTimingValuesAreNormalized() {
+        TFYProgressSwiftHUD.minimumDismissTimeInterval = -2
+        TFYProgressSwiftHUD.maximumDismissTimeInterval = -4
+        XCTAssertEqual(TFYProgressSwiftHUD.minimumDismissTimeInterval, 0)
+        XCTAssertEqual(TFYProgressSwiftHUD.maximumDismissTimeInterval, 0)
     }
-
 }
