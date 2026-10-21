@@ -1,13 +1,13 @@
 # TFYProgressSwiftHUD
 
 [![Version](https://img.shields.io/cocoapods/v/TFYProgressSwiftHUD.svg?style=flat)](https://cocoapods.org/pods/TFYProgressSwiftHUD)
-[![Platform](https://img.shields.io/badge/iOS-15.0%2B-blue.svg)](https://developer.apple.com/ios/)
+[![Platform](https://img.shields.io/badge/iOS-16.0%2B-blue.svg)](https://developer.apple.com/ios/)
 [![Swift](https://img.shields.io/badge/Swift-5.7%2B-orange.svg)](https://swift.org)
 [![License](https://img.shields.io/cocoapods/l/TFYProgressSwiftHUD.svg?style=flat)](LICENSE)
 
 一个轻量、可定制、场景感知的 UIKit HUD。内置 11 种加载动画、确定进度、结果状态、SF Symbols、自定义视图和全屏内容。
 
-当前版本：`2.2.0`。完整版本记录请查看 [CHANGELOG.md](CHANGELOG.md)。
+当前版本：`2.3.0`。完整版本记录请查看 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 特性
 
@@ -22,7 +22,7 @@
 
 ## 系统要求
 
-- iOS 15.0+
+- iOS 16.0+
 - Swift 5.7+
 - Xcode 14+
 
@@ -42,7 +42,7 @@ https://github.com/13662049573/TFYProgressSwiftHUD.git
 dependencies: [
     .package(
         url: "https://github.com/13662049573/TFYProgressSwiftHUD.git",
-        from: "2.2.0"
+        from: "2.3.0"
     )
 ]
 ```
@@ -50,8 +50,8 @@ dependencies: [
 ### CocoaPods
 
 ```ruby
-platform :ios, '15.0'
-pod 'TFYProgressSwiftHUD', '~> 2.2'
+platform :ios, '16.0'
+pod 'TFYProgressSwiftHUD', '~> 2.3'
 ```
 
 ## 快速开始
@@ -186,6 +186,12 @@ xcodebuild \
   -destination 'platform=iOS Simulator,name=iPhone 18 Pro' \
   test
 ```
+
+## 2.3.0 更新摘要
+
+- 最低系统版本提升至 iOS 16.0。
+- HUD 窗口查找采用 Scene `keyWindow` API；深色模式切换在 iOS 17+ 使用 `registerForTraitChanges`。
+- 公开 API 与集成方式不变；升级前请将工程的 Deployment Target 设为 iOS 16 及以上。
 
 ## 2.2.0 更新摘要
 

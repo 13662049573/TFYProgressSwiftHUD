@@ -1,5 +1,28 @@
 import UIKit
 
+private enum HUDWindowLookup {
+    static func foregroundScenes() -> [UIWindowScene] {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .filter { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }
+            .sorted { $0.activationState == .foregroundActive && $1.activationState != .foregroundActive }
+    }
+
+    static func keyWindow(in scene: UIWindowScene) -> UIWindow? {
+        if let key = scene.keyWindow, !key.isHidden { return key }
+        return scene.windows.first(where: {
+            !$0.isHidden && $0.alpha > 0 && $0.windowLevel == .normal
+        })
+    }
+
+    static func activeWindow() -> UIWindow? {
+        for scene in foregroundScenes() {
+            if let window = keyWindow(in: scene) { return window }
+        }
+        return nil
+    }
+}
+
 /// Built-in loading animations.
 public enum AnimationType: CaseIterable, Equatable {
     case systemActivityIndicator
@@ -182,7 +205,7 @@ public final class TFYProgressSwiftHUD: UIView {
             return
         }
 
-        guard let host = hostView ?? Self.activeWindow() else { return }
+        guard let host = hostView ?? HUDWindowLookup.activeWindow() else { return }
         dismissWorkItem?.cancel()
         presentationID += 1
         let wasVisible = overlayView?.superview != nil
@@ -622,19 +645,6 @@ public final class TFYProgressSwiftHUD: UIView {
         updateAppearance()
     }
 
-    private static func activeWindow() -> UIWindow? {
-        let scenes = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .filter { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }
-            .sorted { $0.activationState == .foregroundActive && $1.activationState != .foregroundActive }
-        for scene in scenes {
-            if let key = scene.windows.first(where: { $0.isKeyWindow && !$0.isHidden }) { return key }
-            if let normal = scene.windows.first(where: {
-                !$0.isHidden && $0.alpha > 0 && $0.windowLevel == .normal
-            }) { return normal }
-        }
-        return nil
-    }
 }
 
 // MARK: - Appearance
@@ -817,29 +827,45 @@ public extension TFYProgressSwiftHUD {
 /// Returns the key window for the foreground scene. Kept for source compatibility.
 @available(*, deprecated, message: "Use scene-aware presentation or show(_:in:interaction:).")
 public func KeyWindows() -> UIWindow? {
-    let resolve = {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .filter { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }
-            .flatMap(\.windows)
-            .first(where: { $0.isKeyWindow && !$0.isHidden })
-    }
+    let resolve = { HUDWindowLookup.activeWindow() }
     return Thread.isMainThread ? resolve() : DispatchQueue.main.sync(execute: resolve)
 }
 
 private final class HUDOverlayView: UIView {
     var onLayout: (() -> Void)?
     var onTraitChange: (() -> Void)?
+    private var didRegisterInterfaceStyleTraits = false
 
     override func layoutSubviews() {
         super.layoutSubviews()
         onLayout?()
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        guard window != nil else { return }
+        installInterfaceStyleTraitObserverIfNeeded()
+    }
+
+    private func installInterfaceStyleTraitObserverIfNeeded() {
+        if #available(iOS 17.0, *) {
+            guard !didRegisterInterfaceStyleTraits else { return }
+            didRegisterInterfaceStyleTraits = true
+            registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: HUDOverlayView, _) in
+                self.onTraitChange?()
+            }
+        }
+    }
+
+    private func notifyTraitChangeIfNeeded(from previousTraitCollection: UITraitCollection?) {
         guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else { return }
         onTraitChange?()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 17.0, *) { return }
+        notifyTraitChangeIfNeeded(from: previousTraitCollection)
     }
 }
 

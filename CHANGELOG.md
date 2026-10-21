@@ -2,6 +2,18 @@
 
 本项目遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.3.0] - 2026-10-21
+
+### 变更
+
+- 最低系统版本提升至 **iOS 16.0**（CocoaPods、Swift Package Manager、Xcode 工程与 Demo）。
+- 窗口解析统一使用 `UIWindowScene.keyWindow`，并保留对普通层级窗口的回退逻辑。
+- `HUDOverlayView` 在 iOS 17 及以上通过 `registerForTraitChanges` 监听界面风格变化，iOS 16 仍使用 `traitCollectionDidChange`，避免新版 SDK 弃用警告。
+
+### 兼容性
+
+- 公开 API 保持不变；不再支持 iOS 15。
+
 ## [2.2.0] - 2026-09-13
 
 ### 新增
@@ -43,5 +55,6 @@
 
 - 上一个 CocoaPods 发布版本。
 
+[2.3.0]: https://github.com/13662049573/TFYProgressSwiftHUD/compare/2.2.0...2.3.0
 [2.2.0]: https://github.com/13662049573/TFYProgressSwiftHUD/compare/2.1.6...2.2.0
 [2.1.6]: https://github.com/13662049573/TFYProgressSwiftHUD/releases/tag/2.1.6
