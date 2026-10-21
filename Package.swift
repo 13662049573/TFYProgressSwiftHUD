@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "TFYProgressSwiftHUD",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(name: "TFYProgressSwiftHUD", targets: ["TFYProgressSwiftHUD"])
     ],
